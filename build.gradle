@@ -71,4 +71,5 @@ tasks.withType(Test) {
 license {
     exclude "**/*.json"
     exclude "**/*.pdf"
+    header = file("licenseheaders.txt")
 }
