@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import kotlin.reflect.KClass
 
 internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Configuration::class.java) {
 
@@ -27,7 +28,7 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
 
         val version = root.get("version").asText()
         val extractor = deserializeExtractor(root.get("extractor"))
-        val cleaner = deserializeCleaner(root.get("cleaner"))
+        val cleaner = deserializeCleaners(root.get("cleaner"))
         val output = deserializeOutput(root.get("output"))
 
         return Configuration(
@@ -56,75 +57,74 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
         )
     }
 
-    private fun deserializeCleaner(node: JsonNode): Set<Cleaner> {
+    private fun deserializeCleaners(node: JsonNode): Set<Cleaner> {
         val cleaners = mutableSetOf<Cleaner>()
         for (item in node) {
-            if (item.isTextual) {
-                val cleaner =
-                    when (val key = item.asText()) {
-                        "out-of-page-removal" -> OutOfPageRemoval
-                        "link-detection" -> LinkDetection
-                        "image-detection" -> ImageDetection
-                        "heading-detection" -> HeadingDetection
-                        "heading-detection-dt" -> HeadingDetectionDt
-                        "list-detection" -> ListDetection
-                        "page-number-detection" -> PageNumberDetection
-                        "hierarchy-detection" -> HierarchyDetection
-                        else -> UnknownCleaner(key)
-                    }
-                cleaners.add(cleaner)
-            }
-            if (item.isArray) {
-                val name = item[0].asText()
-                val opts = item[1]
-                val cleaner = when (name) {
-                    "whitespace-removal" -> WhitespaceRemoval(opts["minWidth"].asInt())
-                    "redundancy-detection" -> RedundancyDetection(opts["minOverlap"].asDouble())
-                    "table-detection" -> TableDetection(opts["runConfig"].map { opt ->
-                        TableDetection.Option(
-                            pages = opt["pages"].map { it.asInt() }.toSet(),
-                            flavor = TableDetection.Flavor.fromString(opt["flavor"].asText())
-                        )
-                    }.toList())
-                    "header-footer-detection" -> HeaderFooterDetection(
-                        ignorePages = opts["ignorePages"].map { it.asInt() }.toSet(),
-                        maxMarginPercentage = opts["maxMarginPercentage"].asInt()
-
-                    )
-                    "reading-order-detection" -> ReadingOrderDetection(
-                        minVerticalGapWidth = opts["minVerticalGapWidth"].asInt(),
-                        minColumnWidthInPagePercent = opts["minColumnWidthInPagePercent"].asDouble()
-                    )
-                    "words-to-line" -> WordsToLine(
-                        lineHeightUncertainty = opts["lineHeightUncertainty"].asDouble(),
-                        topUncertainty = opts["topUncertainty"].asDouble(),
-                        maximumSpaceBetweenWords = opts["maximumSpaceBetweenWords"].asInt(),
-                        mergeTableElements = opts["mergeTableElements"].asBoolean()
-                    )
-                    "lines-to-paragraph" -> LinesToParagraph(
-                        tolerance = opts["tolerance"].asDouble()
-
-                    )
-                    "table-of-contents-detection" -> TableOfContentsDetection(
-                        keywords = opts["keywords"].map { it.asText() }.toSet(),
-                        pageKeywords = opts["pageKeywords"].map { it.asText() }.toSet()
-                    )
-                    "regex-matcher" -> RegexMatcher(
-                        isCaseSensitive = opts["isCaseSensitive"].asBoolean(),
-                        isGlobal = opts["isGlobal"].asBoolean(),
-                        queries = opts["queries"].map {
-                            RegexMatcher.Query(
-                                label = it["label"].asText(),
-                                regex = it["regex"].asText()
-                            )
-                        }.toSet()
-                    )
-                    else -> UnknownCleaner(name)
-                }
-                cleaners.add(cleaner)
-            }
+            val cleaner = deserializeCleaner(item)
+            cleaners.add(cleaner)
         }
         return cleaners
+    }
+
+    @Suppress("ReturnCount")
+    private fun deserializeCleaner(node: JsonNode): Cleaner {
+        if (node.isTextual) {
+            val klass: KClass<out Cleaner>? = Cleaner::class.sealedSubclasses.find {
+                it.objectInstance?.name == node.asText()
+            }
+            if (klass != null) {
+                return klass.objectInstance!!
+            }
+        }
+        if (node.isArray) {
+            val name = node[0].asText()
+            val opts = node[1]
+            return when (name) {
+                "whitespace-removal" -> WhitespaceRemoval(opts["minWidth"].asInt())
+                "redundancy-detection" -> RedundancyDetection(opts["minOverlap"].asDouble())
+                "table-detection" -> TableDetection(opts["runConfig"].map { opt ->
+                    TableDetection.Option(
+                        pages = opt["pages"].map { it.asInt() }.toSet(),
+                        flavor = TableDetection.Flavor.fromString(opt["flavor"].asText())
+                    )
+                }.toList())
+                "header-footer-detection" -> HeaderFooterDetection(
+                    ignorePages = opts["ignorePages"].map { it.asInt() }.toSet(),
+                    maxMarginPercentage = opts["maxMarginPercentage"].asInt()
+
+                )
+                "reading-order-detection" -> ReadingOrderDetection(
+                    minVerticalGapWidth = opts["minVerticalGapWidth"].asInt(),
+                    minColumnWidthInPagePercent = opts["minColumnWidthInPagePercent"].asDouble()
+                )
+                "words-to-line" -> WordsToLine(
+                    lineHeightUncertainty = opts["lineHeightUncertainty"].asDouble(),
+                    topUncertainty = opts["topUncertainty"].asDouble(),
+                    maximumSpaceBetweenWords = opts["maximumSpaceBetweenWords"].asInt(),
+                    mergeTableElements = opts["mergeTableElements"].asBoolean()
+                )
+                "lines-to-paragraph" -> LinesToParagraph(
+                    tolerance = opts["tolerance"].asDouble()
+
+                )
+                "table-of-contents-detection" -> TableOfContentsDetection(
+                    keywords = opts["keywords"].map { it.asText() }.toSet(),
+                    pageKeywords = opts["pageKeywords"].map { it.asText() }.toSet()
+                )
+                "regex-matcher" -> RegexMatcher(
+                    isCaseSensitive = opts["isCaseSensitive"].asBoolean(),
+                    isGlobal = opts["isGlobal"].asBoolean(),
+                    queries = opts["queries"].map {
+                        RegexMatcher.Query(
+                            label = it["label"].asText(),
+                            regex = it["regex"].asText()
+                        )
+                    }.toSet()
+                )
+                else -> UnknownCleaner(name)
+            }
+        }
+        return UnknownCleaner(node.asText())
     }
 
     private fun deserializeOutput(node: JsonNode): Output {

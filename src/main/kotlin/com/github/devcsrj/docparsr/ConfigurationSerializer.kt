@@ -55,25 +55,30 @@ internal class ConfigurationSerializer : StdSerializer<Configuration>(Configurat
         gen.apply {
             writeArrayFieldStart("cleaner")
             for (cleaner in cleaners) {
-                if (cleaner::class.objectInstance != null) {
-                    writeRawValue(cleaner.name)
-                    continue
-                } else {
-                    writeStartArray()
-                    writeRawValue(cleaner.name)
-                    writeStartObject()
-
-                    cleaner.javaClass.kotlin.declaredMemberProperties.forEach {
-                        val prop = it.get(cleaner)
-                        writeFieldName(it.name)
-                        writeObject(prop)
-                    }
-
-                    writeEndObject()
-                    writeEndArray()
-                }
+                writeCleaner(cleaner, gen)
             }
             writeEndArray()
+        }
+    }
+
+    private fun writeCleaner(cleaner: Cleaner, gen: JsonGenerator) {
+        gen.apply {
+            if (cleaner::class.objectInstance != null) {
+                writeRawValue(cleaner.name)
+            } else {
+                writeStartArray()
+                writeRawValue(cleaner.name)
+                writeStartObject()
+
+                cleaner.javaClass.kotlin.declaredMemberProperties.forEach {
+                    val prop = it.get(cleaner)
+                    writeFieldName(it.name)
+                    writeObject(prop)
+                }
+
+                writeEndObject()
+                writeEndArray()
+            }
         }
     }
 

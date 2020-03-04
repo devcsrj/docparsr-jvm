@@ -21,9 +21,15 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.HttpUrl
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.Response
 import okio.Source
 import org.apache.tika.Tika
 import java.io.File
@@ -36,6 +42,7 @@ import java.time.Duration
  *
  * See [API guide](https://github.com/axa-group/Parsr/blob/master/docs/api-guide.md)
  */
+@Suppress("MagicNumber")
 internal class DefaultDocParsr(
     val baseUri: HttpUrl,
     val pollingInterval: Duration
