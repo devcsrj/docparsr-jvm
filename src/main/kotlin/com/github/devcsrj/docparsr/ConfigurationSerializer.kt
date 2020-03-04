@@ -3,7 +3,6 @@ package com.github.devcsrj.docparsr
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import java.lang.AssertionError
 import kotlin.reflect.full.declaredMemberProperties
 
 internal class ConfigurationSerializer : StdSerializer<Configuration>(Configuration::class.java) {

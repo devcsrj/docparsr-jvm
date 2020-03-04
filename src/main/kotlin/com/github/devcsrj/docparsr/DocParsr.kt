@@ -2,7 +2,6 @@ package com.github.devcsrj.docparsr
 
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.io.File
-import java.lang.IllegalArgumentException
 import java.net.URI
 import java.time.Duration
 

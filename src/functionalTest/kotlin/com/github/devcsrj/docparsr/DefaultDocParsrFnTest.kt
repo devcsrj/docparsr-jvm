@@ -1,15 +1,11 @@
 package com.github.devcsrj.docparsr
 
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import okio.buffer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
-import java.nio.charset.StandardCharsets
-import java.time.Duration
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
