@@ -10,6 +10,7 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okio.Source
+import org.apache.tika.Tika
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
@@ -25,8 +26,9 @@ internal class DefaultDocParsr(
     val pollingInterval: Duration
 ) : DocParsr {
 
-    private val httpClient = OkHttpClient()
+    private val httpClient: OkHttpClient = OkHttpClient()
     private val objectMapper = ObjectMapper()
+    private val tika = Tika()
 
     init {
         objectMapper.registerModule(KotlinModule())
@@ -58,6 +60,7 @@ internal class DefaultDocParsr(
 
         // Guarded by this.
         private var executed = false
+        private val inputFileMediaType = tika.detect(file).toMediaTypeOrNull()
 
         override fun configuration() = config
         override fun enqueue(callback: ParsingJob.Callback) {
@@ -68,19 +71,19 @@ internal class DefaultDocParsr(
 
             val configFile: File
             try {
-                configFile = Files.createTempFile("parsr-conf", "json").toFile()
-                objectMapper.writeValue(configFile, configFile)
+                configFile = Files.createTempFile("parsr-conf", ".json").toFile()
+                objectMapper.writeValue(configFile, config)
             } catch (e: IOException) {
                 throw ParsingJobException("Could not write configuration to a temporary file", e)
             }
 
             val form = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.name, file.asRequestBody(null))
+                .addFormDataPart("file", file.name, file.asRequestBody(inputFileMediaType))
                 .addFormDataPart(
                     "config",
                     configFile.name,
-                    file.asRequestBody("application/json".toMediaTypeOrNull())
+                    configFile.asRequestBody("application/json".toMediaTypeOrNull())
                 )
                 .build()
             val request = Request.Builder()
@@ -98,11 +101,11 @@ internal class DefaultDocParsr(
                 }
 
                 override fun onResponse(call: Call, response: Response) {
+                    val jobId = response.body?.string()
                     if (response.code % 100 != 2) {
-                        callback.onFailure(job, ParsingJobException("The server rejected the file"))
+                        callback.onFailure(job, ParsingJobException("The server rejected the file ($jobId)"))
                         return
                     }
-                    val jobId = response.body?.string()
                     if (jobId == null) {
                         callback.onFailure(job, ParsingJobException("Expecting a job id from the server, but got none"))
                         return

@@ -31,7 +31,7 @@ internal class ConfigurationSerializer : StdSerializer<Configuration>(Configurat
             writeStringField("pdf", value.pdfExtractor.name)
             writeStringField("ocr", value.ocrExtractor.name)
             writeArrayFieldStart("language")
-            value.languages.forEach { writeRawValue(it) }
+            value.languages.forEach { writeString(it) }
             writeEndArray()
             writeEndObject()
         }
