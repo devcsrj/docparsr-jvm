@@ -1,0 +1,55 @@
+apply plugin: "maven-publish"
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                afterEvaluate {
+                    name = "docparsr"
+                    description = project.description
+                }
+                url = "https://github.com/devcsrj/docparsr-jvm"
+                licenses {
+                    license {
+                        name = "Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
+                        distribution = "repo"
+                    }
+                }
+                scm {
+                    url = "https://github.com/devcsrj/docparsr-jvm"
+                    connection = "scm:git:git@github.com:devcsrj/docparsr-jvm.git"
+                    developerConnection = "scm:git:git@github.com:devcsrj/docparsr-jvm.git"
+                }
+                developers {
+                    developer {
+                        id = "devcsrj"
+                        name = "Reijhanniel Jearl Campos"
+                        email = "devcsrj@apache.org"
+                    }
+                }
+            }
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionResult()
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}
