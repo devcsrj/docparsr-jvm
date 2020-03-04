@@ -18,7 +18,7 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
         return Configuration(
             version = version,
             extractor = extractor,
-            cleaner = cleaner,
+            cleaners = cleaner,
             output = output
         )
     }
@@ -95,8 +95,8 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
                         pageKeywords = opts["pageKeywords"].map { it.asText() }.toSet()
                     )
                     "regex-matcher" -> RegexMatcher(
-                        caseSensitive = opts["isCaseSensitive"].asBoolean(),
-                        global = opts["isGlobal"].asBoolean(),
+                        isCaseSensitive = opts["isCaseSensitive"].asBoolean(),
+                        isGlobal = opts["isGlobal"].asBoolean(),
                         queries = opts["queries"].map {
                             RegexMatcher.Query(
                                 label = it["label"].asText(),

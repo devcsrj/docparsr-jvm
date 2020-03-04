@@ -1,6 +1,8 @@
 package com.github.devcsrj.docparsr
 
-sealed class Cleaner(name: String)
+import com.fasterxml.jackson.annotation.JsonValue
+
+sealed class Cleaner(val name: String)
 
 object OutOfPageRemoval : Cleaner("out-of-page-removal")
 
@@ -8,7 +10,7 @@ data class WhitespaceRemoval(val minWidth: Int = 0) : Cleaner("whitespace-remova
 
 data class RedundancyDetection(val minOverlap: Double = 0.5) : Cleaner("redundancy-detection")
 
-data class TableDetection(val options: List<Option> = emptyList()) : Cleaner("table-detection") {
+data class TableDetection(val runConfig: List<Option> = emptyList()) : Cleaner("table-detection") {
 
     data class Option(
         val pages: Set<Int> = emptySet(),
@@ -18,6 +20,9 @@ data class TableDetection(val options: List<Option> = emptyList()) : Cleaner("ta
     enum class Flavor {
         LATTICE,
         STREAM;
+
+        @JsonValue // :(
+        fun toValue() = this.name.toLowerCase()
 
         companion object {
 
@@ -63,8 +68,8 @@ data class TableOfContentsDetection(
 ) : Cleaner("table-of-contents-detection")
 
 data class RegexMatcher(
-    val caseSensitive: Boolean = true,
-    val global: Boolean = true,
+    val isCaseSensitive: Boolean = true,
+    val isGlobal: Boolean = true,
     val queries: Set<Query> = emptySet()
 ) : Cleaner("regex-matcher") {
 
@@ -74,4 +79,4 @@ data class RegexMatcher(
     )
 }
 
-data class UnknownCleaner(val name: String) : Cleaner(name)
+class UnknownCleaner(name: String) : Cleaner(name)

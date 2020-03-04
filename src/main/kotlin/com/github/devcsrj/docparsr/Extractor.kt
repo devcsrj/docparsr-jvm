@@ -6,11 +6,11 @@ data class Extractor(
     val languages: Set<String> = setOf("eng")
 )
 
-sealed class PdfExtractor(name: String)
+sealed class PdfExtractor(val name: String)
 object PdfMiner : PdfExtractor("pdfminer")
 object PdfJs : PdfExtractor("pdfjs")
-data class UnknownPdfExtractor(val name: String) : PdfExtractor(name)
+class UnknownPdfExtractor(name: String) : PdfExtractor(name)
 
-sealed class OcrExtractor(name: String)
+sealed class OcrExtractor(val name: String)
 object Tesseract : OcrExtractor("tesseract")
-data class UnknownOcrExtractor(val name: String) : OcrExtractor(name)
+class UnknownOcrExtractor(name: String) : OcrExtractor(name)
