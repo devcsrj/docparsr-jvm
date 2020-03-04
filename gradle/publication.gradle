@@ -1,21 +1,10 @@
 apply plugin: "maven-publish"
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
-}
-
-task javadocJar(type: Jar) {
-    from javadoc
-    archiveClassifier = 'javadoc'
-}
+apply plugin: "signing"
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
             pom {
                 afterEvaluate {
                     name = "docparsr"
@@ -51,5 +40,16 @@ publishing {
                 }
             }
         }
+    }
+
+    repositories {
+        maven {
+            name = "mavencentral"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+        }
+    }
+
+    signing {
+        sign publishing.publications.maven
     }
 }
