@@ -1,8 +1,10 @@
 package com.github.devcsrj.docparsr
 
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import java.io.File
 import java.lang.IllegalArgumentException
 import java.net.URI
+import java.time.Duration
 
 /**
  * The central object for accessing [https://github.com/axa-group/Parsr]
@@ -10,6 +12,8 @@ import java.net.URI
 interface DocParsr {
 
     fun getDefaultConfig(): Configuration
+
+    fun newParsingJob(file: File, config: Configuration): ParsingJob
 
     companion object {
 
@@ -20,7 +24,7 @@ interface DocParsr {
          */
         fun create(baseUri: URI): DocParsr {
             val uri = baseUri.toHttpUrlOrNull() ?: throw IllegalArgumentException("Not a valid uri: $baseUri")
-            return DefaultDocParsr(uri)
+            return DefaultDocParsr(uri, Duration.ofSeconds(1L))
         }
     }
 }
