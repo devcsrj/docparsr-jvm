@@ -1,6 +1,28 @@
-# Parsr JVM
+# Parsr
+
+[](https://img.shields.io/travis/devcsrj/docparsr-jvm)
+[](https://img.shields.io/github/license/devcsrj/docparsr-jvm)
+[](https://img.shields.io/maven-central/v/com.github.devcsrj/docparsr)
 
 This project is a JVM client for [Axa group's Parsr](https://github.com/axa-group/Parsr) project.
+
+## Download
+
+Grab via Maven:
+
+```
+<dependency>
+    <groupId>com.github.devcsrj</groupId>
+    <artifactId>docparsr</artifactId>
+    <version>(version)</version>
+</dependency>
+```
+
+or Gradle:
+
+```
+implementation("com.github.devcsrj:docparsr:$version")
+```
 
 ## Usage
 
