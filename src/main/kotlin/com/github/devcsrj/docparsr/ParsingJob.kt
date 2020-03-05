@@ -18,12 +18,25 @@ package com.github.devcsrj.docparsr
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.ZonedDateTime
+import java.util.concurrent.CountDownLatch
 
 interface ParsingJob {
 
+    /**
+     * The configuration used for this job
+     */
     fun configuration(): Configuration
 
+    /**
+     * Starts the job, and notifies the [callback] accordingly
+     */
     fun enqueue(callback: Callback)
+
+    /**
+     * Blocks this call until the [ParsingResult] is received, or
+     * if an exception is thrown
+     */
+    fun execute(): ParsingResult
 
     interface Callback {
         fun onFailure(job: ParsingJob, e: Exception)

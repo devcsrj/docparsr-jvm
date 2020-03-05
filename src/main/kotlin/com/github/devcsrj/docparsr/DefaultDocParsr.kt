@@ -33,8 +33,10 @@ import okhttp3.Response
 import org.apache.tika.Tika
 import java.io.File
 import java.io.IOException
+import java.lang.AssertionError
 import java.nio.file.Files
 import java.time.Duration
+import java.util.concurrent.CountDownLatch
 
 /**
  * A [DocParsr] implementation that communicates with the Parsr API server
@@ -151,7 +153,8 @@ internal class DefaultDocParsr(
                     when (it.code) {
                         201 -> {
                             stopPolling = true
-                            callback.onSuccess(job,
+                            callback.onSuccess(
+                                job,
                                 HttpParsingResult(jobId, baseUri, httpClient)
                             )
                         }
@@ -172,6 +175,30 @@ internal class DefaultDocParsr(
                 if (stopPolling) {
                     break
                 }
+            }
+        }
+
+        override fun execute(): ParsingResult {
+            val latch = CountDownLatch(1)
+            var output: Any? = null
+            enqueue(object : ParsingJob.Callback {
+                override fun onFailure(job: ParsingJob, e: Exception) {
+                    output = e
+                    latch.countDown()
+                }
+
+                override fun onProgress(job: ParsingJob, progress: ParsingJob.Progress) {}
+
+                override fun onSuccess(job: ParsingJob, result: ParsingResult) {
+                    output = result
+                    latch.countDown()
+                }
+            })
+            latch.await()
+            when (output) {
+                is Throwable -> throw output as Throwable
+                is ParsingResult -> return output as ParsingResult
+                else -> throw AssertionError("Should never happen")
             }
         }
     }

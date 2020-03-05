@@ -89,37 +89,11 @@ class DefaultDocParsrFnTest {
             }
         }
 
-        val countDownLatch = CountDownLatch(1)
         val config = Configuration(cleaners = setOf())
         val job = parser.newParsingJob(pdf, config)
+        val result = job.execute()
 
-        val callback = CollectingCallback(countDownLatch)
-        job.enqueue(callback)
-        countDownLatch.await()
-
-        assertThat(callback.exception).isNull()
-        assertThat(callback.result).isNotNull
+        assertThat(result).isNotNull
     }
 
-    private class CollectingCallback(private val latch: CountDownLatch) : ParsingJob.Callback {
-
-        var exception: Exception? = null
-        val updates: Queue<ParsingJob.Progress> = LinkedList()
-        var result: ParsingResult? = null
-
-        override fun onFailure(job: ParsingJob, e: Exception) {
-            exception = e
-            latch.countDown()
-        }
-
-        override fun onProgress(job: ParsingJob, progress: ParsingJob.Progress) {
-            updates.add(progress)
-        }
-
-        override fun onSuccess(job: ParsingJob, result: ParsingResult) {
-            this.result = result
-            latch.countDown()
-        }
-
-    }
 }
