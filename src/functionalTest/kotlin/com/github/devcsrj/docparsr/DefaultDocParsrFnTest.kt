@@ -17,6 +17,8 @@ package com.github.devcsrj.docparsr
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import okio.Buffer
+import okio.buffer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -25,7 +27,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
+import org.skyscreamer.jsonassert.JSONAssert
 import java.io.File
+import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -89,11 +93,29 @@ class DefaultDocParsrFnTest {
             }
         }
 
-        val config = Configuration(cleaners = setOf())
+        val config = Configuration()
         val job = parser.newParsingJob(pdf, config)
         val result = job.execute()
 
         assertThat(result).isNotNull
+
+        assertThat(result.source(Csv).buffer().readUtf8())
+            .isEqualTo(readResource("/dummy.csv"))
+        JSONAssert.assertEquals(
+            readResource("/dummy.json"),
+            result.source(Json).buffer().readUtf8(), false
+        )
+        assertThat(result.source(Markdown).buffer().readUtf8())
+            .isEqualTo(readResource("/dummy.md"))
+        assertThat(result.source(Text).buffer().readUtf8())
+            .isEqualTo(readResource("/dummy.txt"))
+    }
+
+    private fun readResource(path: String): String {
+        return javaClass.getResourceAsStream(path).use { source ->
+            val buffer = Buffer()
+            buffer.readFrom(source).readUtf8()
+        }
     }
 
 }

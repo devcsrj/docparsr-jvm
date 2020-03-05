@@ -64,10 +64,10 @@ internal class ConfigurationSerializer : StdSerializer<Configuration>(Configurat
     private fun writeCleaner(cleaner: Cleaner, gen: JsonGenerator) {
         gen.apply {
             if (cleaner::class.objectInstance != null) {
-                writeRawValue(cleaner.name)
+                writeString(cleaner.name)
             } else {
                 writeStartArray()
-                writeRawValue(cleaner.name)
+                writeString(cleaner.name)
                 writeStartObject()
 
                 cleaner.javaClass.kotlin.declaredMemberProperties.forEach {

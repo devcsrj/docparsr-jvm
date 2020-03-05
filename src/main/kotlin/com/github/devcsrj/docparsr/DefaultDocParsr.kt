@@ -187,7 +187,9 @@ internal class DefaultDocParsr(
                     latch.countDown()
                 }
 
-                override fun onProgress(job: ParsingJob, progress: ParsingJob.Progress) {}
+                override fun onProgress(job: ParsingJob, progress: ParsingJob.Progress) {
+                    // Nothing to do here
+                }
 
                 override fun onSuccess(job: ParsingJob, result: ParsingResult) {
                     output = result

@@ -18,7 +18,7 @@ package com.github.devcsrj.docparsr
 data class Output(
     val granularity: Granularity = Granularity.WORD,
     val includeMarginals: Boolean = false,
-    val formats: Set<Format> = setOf(Json)
+    val formats: Set<Format> = setOf(Json, Text, Csv, Markdown, Pdf)
 ) {
 
     enum class Granularity {

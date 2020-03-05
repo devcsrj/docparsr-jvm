@@ -77,8 +77,11 @@ tasks.withType(Test) {
 }
 
 license {
+    exclude "**/*.csv"
     exclude "**/*.json"
+    exclude "**/*.md"
     exclude "**/*.pdf"
+    exclude "**/*.txt"
     header = file("licenseheaders.txt")
 }
 
