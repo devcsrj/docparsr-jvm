@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import java.nio.charset.StandardCharsets
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.Semaphore
@@ -114,7 +115,7 @@ internal class DefaultDocParsrTest {
         semaphore.acquire(pollCount)
 
         val updates: Queue<ParsingJob.Progress> = LinkedList()
-        var actual: ParsingJob.Result? = null
+        var actual: ParsingResult? = null
         job.enqueue(object : ParsingJob.Callback {
             override fun onFailure(job: ParsingJob, e: Exception) {}
 
@@ -123,7 +124,7 @@ internal class DefaultDocParsrTest {
                 semaphore.release()
             }
 
-            override fun onSuccess(job: ParsingJob, result: ParsingJob.Result) {
+            override fun onSuccess(job: ParsingJob, result: ParsingResult) {
                 actual = result
                 semaphore.release()
             }
@@ -140,5 +141,12 @@ internal class DefaultDocParsrTest {
         assertThat(rr.path).isEqualTo("/api/document")
         assertThat(rr.method).isEqualTo("POST")
         assertThat(rr.getHeader("Content-Type")).startsWith("multipart/form-data")
+        val body = rr.body.buffer.readString(StandardCharsets.UTF_8)
+        assertThat(body).contains("Content-Disposition: form-data; name=\"file\"; filename=\"dummy.pdf\"")
+        assertThat(body).contains("Content-Type: application/pdf")
+        assertThat(body).contains("Content-Length: 13264")
+        assertThat(body).contains("Content-Disposition: form-data; name=\"config\"; filename=\"parsr-conf")
+        assertThat(body).contains("Content-Type: application/json")
+        assertThat(body).contains("Content-Length: 946")
     }
 }

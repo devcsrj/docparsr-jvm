@@ -30,7 +30,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.Response
-import okio.Source
 import org.apache.tika.Tika
 import java.io.File
 import java.io.IOException
@@ -152,7 +151,9 @@ internal class DefaultDocParsr(
                     when (it.code) {
                         201 -> {
                             stopPolling = true
-                            callback.onSuccess(job, HttpResult(jobId, config))
+                            callback.onSuccess(job,
+                                HttpParsingResult(jobId, baseUri, httpClient)
+                            )
                         }
                         200 -> {
                             val src = it.body!!.source().inputStream()
@@ -172,32 +173,6 @@ internal class DefaultDocParsr(
                     break
                 }
             }
-        }
-    }
-
-    private inner class HttpResult(
-        private val id: String,
-        private val config: Configuration
-    ) : ParsingJob.Result {
-
-        override fun id() = id
-        override fun source(format: Format): Source {
-            if (!config.output.formats.contains(format))
-                throw IllegalArgumentException("The format '$format' is not enabled in the job configuration")
-
-            val request = Request.Builder()
-                .get()
-                .url(baseUri.resolve("/${format.name}/$id")!!)
-                .build()
-            val response = httpClient.newCall(request).execute()
-            if (response.code != 200) {
-                throw IllegalStateException(
-                    "Could not fetch result of '$id' for '$format' - the server " +
-                            "responded with '${response.code}'"
-                )
-            }
-            val body = response.body ?: throw IllegalStateException("Could not fetch result for '$format'")
-            return body.source()
         }
     }
 }

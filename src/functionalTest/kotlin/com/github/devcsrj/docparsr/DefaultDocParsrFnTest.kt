@@ -105,7 +105,7 @@ class DefaultDocParsrFnTest {
 
         var exception: Exception? = null
         val updates: Queue<ParsingJob.Progress> = LinkedList()
-        var result: ParsingJob.Result? = null
+        var result: ParsingResult? = null
 
         override fun onFailure(job: ParsingJob, e: Exception) {
             exception = e
@@ -116,7 +116,7 @@ class DefaultDocParsrFnTest {
             updates.add(progress)
         }
 
-        override fun onSuccess(job: ParsingJob, result: ParsingJob.Result) {
+        override fun onSuccess(job: ParsingJob, result: ParsingResult) {
             this.result = result
             latch.countDown()
         }
