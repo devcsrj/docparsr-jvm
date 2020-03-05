@@ -33,7 +33,6 @@ import okhttp3.Response
 import org.apache.tika.Tika
 import java.io.File
 import java.io.IOException
-import java.lang.AssertionError
 import java.nio.file.Files
 import java.time.Duration
 import java.util.concurrent.CountDownLatch

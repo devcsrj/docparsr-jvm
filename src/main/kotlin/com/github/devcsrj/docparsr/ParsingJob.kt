@@ -18,7 +18,6 @@ package com.github.devcsrj.docparsr
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.ZonedDateTime
-import java.util.concurrent.CountDownLatch
 
 interface ParsingJob {
 

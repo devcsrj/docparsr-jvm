@@ -19,12 +19,24 @@ import com.fasterxml.jackson.annotation.JsonValue
 
 sealed class Cleaner(val name: String)
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/OutOfPageRemovalModule)
+ */
 object OutOfPageRemoval : Cleaner("out-of-page-removal")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/WhitespaceRemovalModule)
+ */
 data class WhitespaceRemoval(val minWidth: Int = 0) : Cleaner("whitespace-removal")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/RedundancyDetectionModule)
+ */
 data class RedundancyDetection(val minOverlap: Double = 0.5) : Cleaner("redundancy-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/TableDetectionModule)
+ */
 data class TableDetection(val runConfig: List<Option> = emptyList()) : Cleaner("table-detection") {
 
     data class Option(
@@ -46,18 +58,35 @@ data class TableDetection(val runConfig: List<Option> = emptyList()) : Cleaner("
     }
 }
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/HeaderFooterDetectionModule)
+ */
 data class HeaderFooterDetection(
     val ignorePages: Set<Int> = emptySet(),
     val maxMarginPercentage: Int = 15
 ) : Cleaner("header-footer-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/ReadingOrderDetectionModule)
+ */
 data class ReadingOrderDetection(
     val minVerticalGapWidth: Int = 5,
     val minColumnWidthInPagePercent: Double = 15.0
 ) : Cleaner("reading-order-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/LinkDetectionModule)
+ */
 object LinkDetection : Cleaner("link-detection")
+
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/ImageDetectionModule)
+ */
 object ImageDetection : Cleaner("image-detection")
+
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/WordsToLineModule)
+ */
 data class WordsToLine(
     val lineHeightUncertainty: Double = 0.2,
     val topUncertainty: Double = 0.4,
@@ -65,23 +94,47 @@ data class WordsToLine(
     val mergeTableElements: Boolean = false
 ) : Cleaner("words-to-line")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/LinesToParagraphModule)
+ */
 data class LinesToParagraph(val tolerance: Double = 0.25) : Cleaner("lines-to-paragraph")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/HeadingDetectionModule)
+ */
 object HeadingDetection : Cleaner("heading-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/HeadingDetectionDtModule)
+ */
 object HeadingDetectionDt : Cleaner("heading-detection-dt")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/ListDetectionModule)
+ */
 object ListDetection : Cleaner("list-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/PageNumberDetectionModule)
+ */
 object PageNumberDetection : Cleaner("page-number-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/HierarchyDetectionModule)
+ */
 object HierarchyDetection : Cleaner("hierarchy-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/TableOfContentsDetectionModule)
+ */
 data class TableOfContentsDetection(
     val keywords: Set<String> = emptySet(),
     val pageKeywords: Set<String> = emptySet()
 ) : Cleaner("table-of-contents-detection")
 
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/RegexMatcherModule)
+ */
 data class RegexMatcher(
     val isCaseSensitive: Boolean = true,
     val isGlobal: Boolean = true,
@@ -95,3 +148,28 @@ data class RegexMatcher(
 }
 
 class UnknownCleaner(name: String) : Cleaner(name)
+
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/KeyValueDetectionModule)
+ */
+data class KeyValueDetection(
+    val threshold: Double = 0.2,
+    val keyValueDividedChars: Set<String>,
+    val keyPatterns: Map<String, Set<String>>
+) : Cleaner("key-value-detection")
+
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/NumberCorrectionModule)
+ */
+data class NumberCorrection(
+    val fixSplitNumbers: Boolean = true,
+    val maxConsecutiveSplits: Int = 3,
+    val numberRegExp: String,
+    val whitelist: Set<String> = emptySet()
+
+) : Cleaner("number-correction")
+
+/**
+ * See [module](https://github.com/axa-group/Parsr/tree/master/server/src/processing/SeparateWordsModule)
+ */
+object SeparateWords : Cleaner("separate-words")
