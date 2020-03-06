@@ -118,6 +118,25 @@ internal object DocParsrModuleTest : Spek({
                 )
                 assertThat(actual.content()).isEmpty()
             }
+
+            it("can deserialize heading") {
+                val actual = javaClass.getResourceAsStream("/element/heading.json").use {
+                    objectMapper.readValue(it, Heading::class.java)
+                }
+                assertThat(actual.id()).isEqualTo(84084)
+                assertThat(actual.type()).isEqualTo(Element.Type.HEADING)
+                assertThat(actual.properties()).containsEntry("order", 0)
+                assertThat(actual.box()).isEqualTo(
+                    Box(
+                        left = 158.15,
+                        top = 204.92,
+                        width = 288.63,
+                        height = 22.9
+                    )
+                )
+                assertThat(actual.content()).isEmpty()
+                assertThat(actual.level()).isEqualTo(5)
+            }
         }
     }
 })
