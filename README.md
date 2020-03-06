@@ -96,6 +96,16 @@ you have [Docker](https://www.docker.com/) installed, run the tests with:
 $ ./gradlew functionalTest
 ```
 
+## Future work
+
+* [Key-Value pair metadata](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#31-key-value-pair-metadata)
+* Type-safe [element properties](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#13-properties-of-an-element) (currently a `Map<String, Any>`)
+* [Drawing](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#126-drawing-type)
+* [Image](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
+* [Barcode](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
+* [List](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
+* [Table](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
+
 ## Motivation
 
 When I was working on the [Klerk](https://github.com/devcsrj/klerk) project, I realized how difficult
