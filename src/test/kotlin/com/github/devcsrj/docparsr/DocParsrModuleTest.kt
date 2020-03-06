@@ -156,5 +156,22 @@ internal object DocParsrModuleTest : Spek({
                 )
             }
         }
+
+        describe("pages") {
+
+            it("can deserialize fonts") {
+                val actual = javaClass.getResourceAsStream("/page/font.json").use {
+                    objectMapper.readValue(it, Font::class.java)
+                }
+                assertThat(actual.id).isEqualTo(FontId.valueOf(22))
+                assertThat(actual.name).isEqualTo("CISFEO+TimesNewRomanPSMT")
+                assertThat(actual.size).isEqualTo(13.47)
+                assertThat(actual.weight).isEqualTo(FontWeight.valueOf("medium"))
+                assertThat(actual.isItalic).isFalse()
+                assertThat(actual.isUnderline).isFalse()
+                assertThat(actual.color).isEqualTo(FontColor.fromHex("#000000"))
+                assertThat(actual.sizeUnit).isEqualTo("px")
+            }
+        }
     }
 })
