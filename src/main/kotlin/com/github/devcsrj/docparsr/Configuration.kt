@@ -15,6 +15,9 @@
  */
 package com.github.devcsrj.docparsr
 
+/**
+ * See [structure](https://github.com/axa-group/Parsr/blob/master/docs/configuration.md)
+ */
 data class Configuration(
     val version: String = "0.9",
     val extractor: Extractor = Extractor(),
