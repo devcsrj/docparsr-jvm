@@ -15,11 +15,14 @@
  */
 package com.github.devcsrj.docparsr
 
-interface PageVisitor {
+interface DocumentVisitor {
 
-    fun visitHeading(heading: Heading)
-    fun visitLine(line: Line)
-    fun visitParagraph(paragraph: Paragraph)
-    fun visitWord(word: Word)
-    fun visitAnyElement(element: AnyElement)
+    fun visitMeta(meta: Metadata) {}
+    fun visitPage(page: Page) {}
+    fun visitHeading(heading: Heading) {}
+    fun visitLine(line: Line) {}
+    fun visitParagraph(paragraph: Paragraph) {}
+    fun visitWord(word: Word) {}
+    fun visitAnyElement(element: AnyElement) {}
+    fun visitFont(font: Font) {}
 }

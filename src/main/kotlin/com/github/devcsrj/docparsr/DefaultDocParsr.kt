@@ -49,14 +49,8 @@ internal class DefaultDocParsr(
 ) : DocParsr {
 
     private val httpClient: OkHttpClient = OkHttpClient()
-    private val objectMapper = ObjectMapper()
+    private val objectMapper = Jackson.MAPPER
     private val tika = Tika()
-
-    init {
-        objectMapper.registerModule(KotlinModule())
-        objectMapper.registerModule(JavaTimeModule())
-        objectMapper.registerModule(DocParsrModule)
-    }
 
     override fun getDefaultConfig(): Configuration {
         val request = Request.Builder()

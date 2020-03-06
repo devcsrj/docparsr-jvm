@@ -1,0 +1,173 @@
+{
+  "metadata": [
+    {
+      "id": 1,
+      "elements": [
+        13
+      ],
+      "type": "regex",
+      "data": {
+        "name": "Percent",
+        "regex": "(Dummy)",
+        "fullMatch": "Dummy",
+        "groups": [
+          "Dummy"
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "margins": {
+        "top": -1,
+        "left": -1,
+        "bottom": -1,
+        "right": -1
+      },
+      "box": {
+        "l": 0,
+        "t": 0,
+        "w": 595,
+        "h": 842
+      },
+      "rotation": {
+        "degrees": 0,
+        "origin": {
+          "x": 0,
+          "y": 0
+        },
+        "translation": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "pageNumber": 1,
+      "elements": [
+        {
+          "id": 84084,
+          "type": "heading",
+          "properties": {
+            "order": 0
+          },
+          "metadata": [],
+          "box": {
+            "l": 158.15,
+            "t": 204.92,
+            "w": 288.63,
+            "h": 22.9
+          },
+          "content": [],
+          "level": 5
+        },
+        {
+          "id": 19,
+          "type": "paragraph",
+          "properties": {
+            "order": 0
+          },
+          "metadata": [],
+          "box": {
+            "l": 56.8,
+            "t": 58.17,
+            "w": 123.41,
+            "h": 22.33
+          },
+          "content": [
+            {
+              "id": 16,
+              "type": "line",
+              "properties": {
+                "order": 0
+              },
+              "metadata": [],
+              "box": {
+                "l": 56.8,
+                "t": 58.17,
+                "w": 123.41,
+                "h": 22.33
+              },
+              "content": [
+                {
+                  "id": 13,
+                  "type": "word",
+                  "properties": {
+                    "order": 0
+                  },
+                  "metadata": [],
+                  "box": {
+                    "l": 56.8,
+                    "t": 58.17,
+                    "w": 59.05,
+                    "h": 22.33
+                  },
+                  "content": "Dummy",
+                  "font": 1
+                },
+                {
+                  "id": 14,
+                  "type": "word",
+                  "properties": {
+                    "order": 1
+                  },
+                  "metadata": [],
+                  "box": {
+                    "l": 120.3,
+                    "t": 58.17,
+                    "w": 32.17,
+                    "h": 22.33
+                  },
+                  "content": "PDF",
+                  "font": 1
+                },
+                {
+                  "id": 15,
+                  "type": "word",
+                  "properties": {
+                    "order": 2
+                  },
+                  "metadata": [],
+                  "box": {
+                    "l": 156.96,
+                    "t": 58.17,
+                    "w": 23.25,
+                    "h": 22.33
+                  },
+                  "content": "file",
+                  "font": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 132,
+          "type": "image",
+          "properties": {},
+          "metadata": [],
+          "box": {
+            "l": 0,
+            "t": 0,
+            "w": 595.7,
+            "h": 840.95
+          },
+          "src": "",
+          "refId": "Bg",
+          "xObjId": "103",
+          "xObjExt": "jpg"
+        }
+      ]
+    }
+  ],
+  "fonts": [
+    {
+      "id": 1,
+      "name": "BAAAAA+Arial-BoldMT",
+      "size": 22.331,
+      "weight": "bold",
+      "isItalic": false,
+      "isUnderline": false,
+      "color": "#000000",
+      "sizeUnit": "px"
+    }
+  ]
+}

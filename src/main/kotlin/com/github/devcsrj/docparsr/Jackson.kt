@@ -15,11 +15,17 @@
  */
 package com.github.devcsrj.docparsr
 
-interface PageVisitor {
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 
-    fun visitHeading(heading: Heading)
-    fun visitLine(line: Line)
-    fun visitParagraph(paragraph: Paragraph)
-    fun visitWord(word: Word)
-    fun visitAnyElement(element: AnyElement)
+internal object Jackson {
+
+    val MAPPER = ObjectMapper()
+
+    init {
+        MAPPER.registerModule(KotlinModule())
+        MAPPER.registerModule(JavaTimeModule())
+        MAPPER.registerModule(DocParsrModule)
+    }
 }

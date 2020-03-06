@@ -46,7 +46,7 @@ data class Page(
                 is Paragraph -> visitor.visitParagraph(next)
                 is Line -> visitor.visitLine(next)
                 is Word -> visitor.visitWord(next)
-                is AnyElement -> visitor.visitAny(next)
+                is AnyElement -> visitor.visitAnyElement(next)
                 else -> throw AssertionError("Unexpected type: ${next::class}")
             }
         }
