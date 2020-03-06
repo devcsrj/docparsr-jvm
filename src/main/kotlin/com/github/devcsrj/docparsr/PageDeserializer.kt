@@ -38,8 +38,8 @@ internal class PageDeserializer : StdDeserializer<Page>(Page::class.java) {
         )
     }
 
-    private fun deserializeElements(root: JsonNode, p: JsonParser): List<Element<*>> {
-        val elements = mutableListOf<Element<*>>()
+    private fun deserializeElements(root: JsonNode, p: JsonParser): ArrayList<Element<*>> {
+        val elements = arrayListOf<Element<*>>()
         for (item in root) {
             val element = when (Element.Type.fromValue(item["type"].asText())) {
                 Element.Type.WORD -> p.codec.treeToValue(item, Word::class.java)

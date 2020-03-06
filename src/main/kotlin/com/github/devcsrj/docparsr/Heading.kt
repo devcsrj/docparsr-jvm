@@ -22,7 +22,7 @@ data class Heading(
     @JsonProperty("id") private val id: ElementId,
     @JsonProperty("box") private val box: Box,
     @JsonProperty("properties") private val properties: MutableMap<String, Any>,
-    @JsonProperty("content") private val content: List<Line>,
+    @JsonProperty("content") private val content: ArrayList<Line>,
     @JsonProperty("level") private val level: Int
 ) : Element<List<Line>> {
 

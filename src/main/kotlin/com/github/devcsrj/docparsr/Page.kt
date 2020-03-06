@@ -17,6 +17,9 @@ package com.github.devcsrj.docparsr
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.lang.AssertionError
+import java.util.*
+import kotlin.collections.ArrayList
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Page(
@@ -25,5 +28,27 @@ data class Page(
     val rotation: Rotation,
     @JsonProperty("pageNumber")
     val number: Int,
-    val elements: List<Element<*>>
-)
+    val elements: ArrayList<Element<*>>
+) {
+
+    fun accept(visitor: PageVisitor) {
+        val stack = Stack<Element<*>>()
+        stack.addAll(elements.asReversed())
+        while (stack.isNotEmpty()) {
+            val next = stack.pop()
+            if (next.content() is ArrayList<*>) {
+                val children = next.content() as ArrayList<Element<*>>
+                stack.addAll(children.asReversed())
+            }
+
+            when (next) {
+                is Heading -> visitor.visitHeading(next)
+                is Paragraph -> visitor.visitParagraph(next)
+                is Line -> visitor.visitLine(next)
+                is Word -> visitor.visitWord(next)
+                is AnyElement -> visitor.visitAny(next)
+                else -> throw AssertionError("Unexpected type: ${next::class}")
+            }
+        }
+    }
+}

@@ -22,7 +22,7 @@ data class Line(
     @JsonProperty("id") private val id: ElementId,
     @JsonProperty("box") private val box: Box,
     @JsonProperty("properties") private val properties: MutableMap<String, Any>,
-    @JsonProperty("content") private val content: List<Word>
+    @JsonProperty("content") private val content: ArrayList<Word>
 ) : Element<List<Word>> {
 
     override fun type() = Element.Type.LINE
