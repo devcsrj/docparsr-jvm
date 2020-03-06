@@ -15,7 +15,7 @@
  */
 package com.github.devcsrj.docparsr
 
-import okio.Source
+import java.io.InputStream
 
 interface ParsingResult {
     /**
@@ -28,5 +28,5 @@ interface ParsingResult {
      *
      * @throws IllegalArgumentException if the format wasn't provided in the [Configuration]
      **/
-    fun source(format: Format): Source
+    fun source(format: Format): InputStream
 }

@@ -47,7 +47,7 @@ class HttpParsingResultTest : Spek({
                 val result = HttpParsingResult(jobId, mockWebServer.url("/"), httpClient)
                 assertThat(result.id()).isEqualTo(jobId)
                 val actual = result.source(format)
-                assertThat(actual).isNotNull
+                assertThat(actual).hasContent("")
 
                 val rr = mockWebServer.takeRequest()
                 assertThat(rr.method).isEqualTo("GET")

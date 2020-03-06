@@ -18,7 +18,7 @@ package com.github.devcsrj.docparsr
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okio.Source
+import java.io.InputStream
 
 internal class HttpParsingResult(
     private val id: String,
@@ -29,7 +29,7 @@ internal class HttpParsingResult(
     override fun id() = id
 
     @Suppress("MagicNumber")
-    override fun source(format: Format): Source {
+    override fun source(format: Format): InputStream {
         val request = Request.Builder()
             .get()
             .url(baseUri.resolve("/api/${format.name}/$id")!!)
@@ -42,6 +42,6 @@ internal class HttpParsingResult(
             )
         }
         val body = response.body ?: throw IllegalStateException("Could not fetch result for '$format'")
-        return body.source()
+        return body.byteStream()
     }
 }
