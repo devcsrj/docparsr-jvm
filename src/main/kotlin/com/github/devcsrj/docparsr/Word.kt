@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Word(
-    @JsonProperty("id") private val id: Int,
+    @JsonProperty("id") private val id: Long,
     @JsonProperty("box") private val box: Box,
     @JsonProperty("properties") private val properties: MutableMap<String, Any>,
     @JsonProperty("content") private val content: String,
@@ -27,7 +27,7 @@ data class Word(
 ) : Element<String> {
 
     override fun type() = Element.Type.WORD
-    override fun id() = id
+    override fun id(): Long = id
     override fun box() = box
     override fun properties() = properties
     @JsonAnySetter

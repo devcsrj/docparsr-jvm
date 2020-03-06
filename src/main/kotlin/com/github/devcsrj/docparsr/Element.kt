@@ -21,7 +21,7 @@ import java.lang.IllegalArgumentException
 interface Element<T> {
 
     fun type(): Type
-    fun id(): Int
+    fun id(): Long
     fun box(): Box
     fun properties(): Map<String, Any>
     fun content(): T
