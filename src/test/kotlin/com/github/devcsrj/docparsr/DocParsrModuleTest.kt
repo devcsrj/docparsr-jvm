@@ -100,6 +100,24 @@ internal object DocParsrModuleTest : Spek({
                 )
                 assertThat(actual.content()).isEmpty()
             }
+
+            it("can deserialize paragraph") {
+                val actual = javaClass.getResourceAsStream("/element/paragraph.json").use {
+                    objectMapper.readValue(it, Paragraph::class.java)
+                }
+                assertThat(actual.id()).isEqualTo(84348)
+                assertThat(actual.type()).isEqualTo(Element.Type.PARAGRAPH)
+                assertThat(actual.properties()).containsEntry("order", 45)
+                assertThat(actual.box()).isEqualTo(
+                    Box(
+                        left = 326.14,
+                        top = 114.12,
+                        width = 132.03,
+                        height = 14.14
+                    )
+                )
+                assertThat(actual.content()).isEmpty()
+            }
         }
     }
 })
