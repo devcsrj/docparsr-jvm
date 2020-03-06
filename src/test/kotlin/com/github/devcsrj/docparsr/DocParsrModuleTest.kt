@@ -64,7 +64,7 @@ internal object DocParsrModuleTest : Spek({
 
         describe("elements") {
 
-            it("can deserialize heading") {
+            it("can deserialize word") {
                 val actual = javaClass.getResourceAsStream("/element/word.json").use {
                     objectMapper.readValue(it, Word::class.java)
                 }
@@ -81,6 +81,24 @@ internal object DocParsrModuleTest : Spek({
                 )
                 assertThat(actual.content()).isEqualTo("REPUBLIC")
                 assertThat(actual.fontId()).isEqualTo(FontId.valueOf(1))
+            }
+
+            it("can deserialize line") {
+                val actual = javaClass.getResourceAsStream("/element/line.json").use {
+                    objectMapper.readValue(it, Line::class.java)
+                }
+                assertThat(actual.id()).isEqualTo(81180)
+                assertThat(actual.type()).isEqualTo(Element.Type.LINE)
+                assertThat(actual.properties()).containsEntry("order", 0)
+                assertThat(actual.box()).isEqualTo(
+                    Box(
+                        left = 158.15,
+                        top = 204.92,
+                        width = 288.63,
+                        height = 22.9
+                    )
+                )
+                assertThat(actual.content()).isEmpty()
             }
         }
     }
