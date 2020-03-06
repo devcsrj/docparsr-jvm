@@ -21,7 +21,7 @@ import java.lang.IllegalArgumentException
 interface Element<T> {
 
     fun type(): Type
-    fun id(): Long
+    fun id(): ElementId
     fun box(): Box
     fun properties(): Map<String, Any>
     fun content(): T?
@@ -49,5 +49,13 @@ interface Element<T> {
                     ?: throw IllegalArgumentException("Unknown type: $str")
             }
         }
+    }
+}
+
+data class ElementId(val value: Long) {
+    companion object {
+        @JvmStatic
+        @JsonCreator
+        fun valueOf(value: Long) = ElementId(value)
     }
 }

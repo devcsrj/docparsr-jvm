@@ -32,6 +32,7 @@ object DocParsrModule : Module() {
         val deserializers = SimpleDeserializers()
         deserializers.addDeserializer(Configuration::class.java, ConfigurationDeserializer())
         deserializers.addDeserializer(Page::class.java, PageDeserializer())
+        deserializers.addDeserializer(Metadata::class.java, MetadataDeserializer())
         context.addDeserializers(deserializers)
 
         val serializers = SimpleSerializers()

@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "elements": [
+    37381
+  ],
+  "type": "regex",
+  "data": {
+    "name": "Percent",
+    "regex": "([\\-]?(\\d)+[\\.\\,]*(\\d)*)[ ]*(%|per|percent)",
+    "fullMatch": "34%",
+    "groups": [
+      "34",
+      "4",
+      null,
+      "%"
+    ]
+  }
+}

@@ -62,7 +62,7 @@ internal object DocParsrModuleTest : Spek({
                 val actual = javaClass.getResourceAsStream("/element/word.json").use {
                     objectMapper.readValue(it, Word::class.java)
                 }
-                assertThat(actual.id()).isEqualTo(25)
+                assertThat(actual.id()).isEqualTo(ElementId.valueOf(25))
                 assertThat(actual.type()).isEqualTo(Element.Type.WORD)
                 assertThat(actual.properties()).containsEntry("order", 0)
                 assertThat(actual.box()).isEqualTo(
@@ -81,7 +81,7 @@ internal object DocParsrModuleTest : Spek({
                 val actual = javaClass.getResourceAsStream("/element/line.json").use {
                     objectMapper.readValue(it, Line::class.java)
                 }
-                assertThat(actual.id()).isEqualTo(81180)
+                assertThat(actual.id()).isEqualTo(ElementId.valueOf(81180))
                 assertThat(actual.type()).isEqualTo(Element.Type.LINE)
                 assertThat(actual.properties()).containsEntry("order", 0)
                 assertThat(actual.box()).isEqualTo(
@@ -99,7 +99,7 @@ internal object DocParsrModuleTest : Spek({
                 val actual = javaClass.getResourceAsStream("/element/paragraph.json").use {
                     objectMapper.readValue(it, Paragraph::class.java)
                 }
-                assertThat(actual.id()).isEqualTo(84348)
+                assertThat(actual.id()).isEqualTo(ElementId.valueOf(84348))
                 assertThat(actual.type()).isEqualTo(Element.Type.PARAGRAPH)
                 assertThat(actual.properties()).containsEntry("order", 45)
                 assertThat(actual.box()).isEqualTo(
@@ -117,7 +117,7 @@ internal object DocParsrModuleTest : Spek({
                 val actual = javaClass.getResourceAsStream("/element/heading.json").use {
                     objectMapper.readValue(it, Heading::class.java)
                 }
-                assertThat(actual.id()).isEqualTo(84084)
+                assertThat(actual.id()).isEqualTo(ElementId.valueOf(84084))
                 assertThat(actual.type()).isEqualTo(Element.Type.HEADING)
                 assertThat(actual.properties()).containsEntry("order", 0)
                 assertThat(actual.box()).isEqualTo(
@@ -136,7 +136,7 @@ internal object DocParsrModuleTest : Spek({
                 val actual = javaClass.getResourceAsStream("/element/image.json").use {
                     objectMapper.readValue(it, AnyElement::class.java)
                 }
-                assertThat(actual.id()).isEqualTo(132)
+                assertThat(actual.id()).isEqualTo(ElementId.valueOf(132))
                 assertThat(actual.type()).isEqualTo(Element.Type.IMAGE)
                 assertThat(actual.properties()).containsEntry("src", "")
                 assertThat(actual.properties()).containsEntry("refId", "Bg")
@@ -190,6 +190,26 @@ internal object DocParsrModuleTest : Spek({
                 )
                 assertThat(actual.number).isEqualTo(1)
                 assertThat(actual.elements).hasSize(8)
+            }
+        }
+
+        describe("metadata") {
+
+            it("can deserialize regex content") {
+                val actual = javaClass.getResourceAsStream("/metadata/regex.json").use {
+                    objectMapper.readValue(it, Metadata::class.java)
+                }
+                assertThat(actual.id).isEqualTo(MetadataId.valueOf(1))
+                assertThat(actual.elementIds).containsExactly(ElementId.valueOf(37381))
+                assertThat(actual.type).isEqualTo(Metadata.Type.REGEX)
+
+                val content = actual.content as Metadata.RegexContent
+                assertThat(content.name).isEqualTo("Percent")
+                assertThat(content.regex).isEqualTo("([\\-]?(\\d)+[\\.\\,]*(\\d)*)[ ]*(%|per|percent)")
+                assertThat(content.fullMatch).isEqualTo("34%")
+                assertThat(content.groups).containsExactly(
+                    "34", "4", null, "%"
+                )
             }
         }
     }

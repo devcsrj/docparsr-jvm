@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class AnyElement(
-    @JsonProperty("id") private val id: Long,
+    @JsonProperty("id") private val id: ElementId,
     @JsonProperty("type") private val type: Element.Type,
     @JsonProperty("box") private val box: Box,
     @JsonProperty("properties") private val properties: MutableMap<String, Any>,
@@ -27,7 +27,7 @@ data class AnyElement(
 ) : Element<Any> {
 
     override fun type() = type
-    override fun id(): Long = id
+    override fun id() = id
     override fun box() = box
     override fun properties() = properties
     @JsonAnySetter
