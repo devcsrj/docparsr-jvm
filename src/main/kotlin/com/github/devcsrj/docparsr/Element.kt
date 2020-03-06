@@ -24,7 +24,7 @@ interface Element<T> {
     fun id(): Long
     fun box(): Box
     fun properties(): Map<String, Any>
-    fun content(): T
+    fun content(): T?
 
     enum class Type {
         CHARACTER,

@@ -135,6 +135,26 @@ internal object DocParsrModuleTest : Spek({
                 assertThat(actual.content()).isEmpty()
                 assertThat(actual.level()).isEqualTo(5)
             }
+
+            it("can deserialize generic element") {
+                val actual = javaClass.getResourceAsStream("/element/image.json").use {
+                    objectMapper.readValue(it, AnyElement::class.java)
+                }
+                assertThat(actual.id()).isEqualTo(132)
+                assertThat(actual.type()).isEqualTo(Element.Type.IMAGE)
+                assertThat(actual.properties()).containsEntry("src", "")
+                assertThat(actual.properties()).containsEntry("refId", "Bg")
+                assertThat(actual.properties()).containsEntry("xObjId", "103")
+                assertThat(actual.properties()).containsEntry("xObjExt", "jpg")
+                assertThat(actual.box()).isEqualTo(
+                    Box(
+                        left = 0.0,
+                        top = 0.0,
+                        width = 595.7,
+                        height = 840.95
+                    )
+                )
+            }
         }
     }
 })
