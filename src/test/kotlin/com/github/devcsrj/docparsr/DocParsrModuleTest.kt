@@ -15,6 +15,8 @@
  */
 package com.github.devcsrj.docparsr
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -57,6 +59,29 @@ internal object DocParsrModuleTest : Spek({
             }
             assertThat(actual.timestamp).isNotNull()
             assertThat(actual.message).isEqualTo("Detecting reading order...")
+        }
+
+
+        describe("elements") {
+
+            it("can deserialize heading") {
+                val actual = javaClass.getResourceAsStream("/element/word.json").use {
+                    objectMapper.readValue(it, Word::class.java)
+                }
+                assertThat(actual.id()).isEqualTo(25)
+                assertThat(actual.type()).isEqualTo(Element.Type.WORD)
+                assertThat(actual.properties()).containsEntry("order", 0)
+                assertThat(actual.box()).isEqualTo(
+                    Box(
+                        left = 158.15,
+                        top = 204.92,
+                        width = 88.89,
+                        height = 22.9
+                    )
+                )
+                assertThat(actual.content()).isEqualTo("REPUBLIC")
+                assertThat(actual.fontId()).isEqualTo(FontId.valueOf(1))
+            }
         }
     }
 })
