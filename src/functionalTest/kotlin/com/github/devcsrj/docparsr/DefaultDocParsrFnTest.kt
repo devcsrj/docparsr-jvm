@@ -99,15 +99,15 @@ class DefaultDocParsrFnTest {
 
         assertThat(result).isNotNull
 
-        assertThat(result.source(Csv).buffer().readUtf8())
+        assertThat(result.source(Csv).bufferedReader().readText())
             .isEqualTo(readResource("/dummy.csv"))
         JSONAssert.assertEquals(
             readResource("/dummy.json"),
-            result.source(Json).buffer().readUtf8(), false
+            result.source(Json).bufferedReader().readText(), false
         )
-        assertThat(result.source(Markdown).buffer().readUtf8())
+        assertThat(result.source(Markdown).bufferedReader().readText())
             .isEqualTo(readResource("/dummy.md"))
-        assertThat(result.source(Text).buffer().readUtf8())
+        assertThat(result.source(Text).bufferedReader().readText())
             .isEqualTo(readResource("/dummy.txt"))
     }
 
