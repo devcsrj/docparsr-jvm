@@ -17,8 +17,6 @@ package com.github.devcsrj.docparsr
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.assertj.core.api.Assertions.assertThat
 import org.skyscreamer.jsonassert.JSONAssert
 import org.spekframework.spek2.Spek
@@ -29,8 +27,6 @@ internal object DocParsrModuleTest : Spek({
     val objectMapper = ObjectMapper()
     objectMapper.setDefaultPrettyPrinter(DefaultPrettyPrinter())
     objectMapper.registerModule(DocParsrModule)
-    objectMapper.registerModule(KotlinModule())
-    objectMapper.registerModule(JavaTimeModule())
 
     describe("Jackson module") {
         val goldenConfig = GoldenConfiguration.INSTANCE
@@ -171,6 +167,29 @@ internal object DocParsrModuleTest : Spek({
                 assertThat(actual.isUnderline).isFalse()
                 assertThat(actual.color).isEqualTo(FontColor.fromHex("#000000"))
                 assertThat(actual.sizeUnit).isEqualTo("px")
+            }
+
+            it("can deserialize page") {
+                val actual = javaClass.getResourceAsStream("/page/page.json").use {
+                    objectMapper.readValue(it, Page::class.java)
+                }
+                assertThat(actual.box).isEqualTo(
+                    Box(
+                        left = 0.0,
+                        top = 0.0,
+                        width = 595.7,
+                        height = 840.95
+                    )
+                )
+                assertThat(actual.rotation).isEqualTo(
+                    Rotation(
+                        degrees = 0.0,
+                        origin = Point(0, 0),
+                        translation = Point(0, 0)
+                    )
+                )
+                assertThat(actual.number).isEqualTo(1)
+                assertThat(actual.elements).hasSize(8)
             }
         }
     }

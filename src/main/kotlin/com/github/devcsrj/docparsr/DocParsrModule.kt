@@ -19,6 +19,8 @@ import com.fasterxml.jackson.core.Version
 import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.module.SimpleDeserializers
 import com.fasterxml.jackson.databind.module.SimpleSerializers
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 
 object DocParsrModule : Module() {
 
@@ -29,10 +31,15 @@ object DocParsrModule : Module() {
     override fun setupModule(context: SetupContext) {
         val deserializers = SimpleDeserializers()
         deserializers.addDeserializer(Configuration::class.java, ConfigurationDeserializer())
+        deserializers.addDeserializer(Page::class.java, PageDeserializer())
         context.addDeserializers(deserializers)
 
         val serializers = SimpleSerializers()
         serializers.addSerializer(Configuration::class.java, ConfigurationSerializer())
         context.addSerializers(serializers)
+    }
+
+    override fun getDependencies(): MutableIterable<Module> {
+        return mutableListOf(KotlinModule(), JavaTimeModule())
     }
 }
