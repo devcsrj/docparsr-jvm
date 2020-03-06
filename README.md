@@ -26,11 +26,63 @@ implementation("com.github.devcsrj:docparsr:$version")
 
 ## Usage
 
-`TBD`
+Assuming you have the [API server running](https://github.com/axa-group/Parsr#usage), you can communicate 
+with it using: 
+
+```kotlin
+val uri = URI.create("http://localhost:3001")
+val parser = DocParsr.create(uri)
+```
+
+Then, submit your file with:
+
+```kotlin
+val file = File("hello.pdf")    // your pdf or image file
+val config = Configuration()    // or, 'parser.getDefaultConfig()`
+val job = parser.newParsingJob(file, config)
+```
+
+At this point, the `job` object presents you with either synchronous:
+
+```kotlin
+val result = job.execute()
+``` 
+
+...or asynchronous method:
+
+```kotlin
+val callback = object: Callback {
+    fun onFailure(job: ParsingJob, e: Exception) {}
+    fun onProgress(job: ParsingJob, progress: Progress) {}
+    fun onSuccess(job: ParsingJob, result: ParsingResult) {}
+}
+job.enqueue(callback)
+```
+
+Regardless of the approach you choose, you end up with a `ParsingResult`. You can then
+access the [various generated output](https://github.com/axa-group/Parsr/blob/master/docs/api-guide.md#3-get-the-results)
+from the server with:
+
+```kotlin
+result.source(Text).use {
+   // copy the InputStream
+}
+``` 
+
+If you are instead interested on the [JSON schema](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md), this
+library provides a [Visitor](https://en.wikipedia.org/wiki/Visitor_pattern) -based API:
+
+```kotlin
+val visitor = object: DocumentVisitor {
+   // override methods
+}
+val document = Document.from(result)
+document.accept(visitor) 
+```
 
 ## Building
 
-Like any other [gradle](https://github.com/axa-group/Parsr)-based project, you can build the artifacts
+Like any other [gradle](https://github.com/axa-group/Parsr) -based project, you can build the artifacts
 with:
 
 ```
