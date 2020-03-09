@@ -20,24 +20,15 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 
-internal class PageDeserializer : StdDeserializer<Page>(Page::class.java) {
-
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Page {
+internal class ElementDeserializer : StdDeserializer<Element<*>>(Element::class.java) {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Element<*> {
         val root = p.codec.readTree<JsonNode>(p)
-
-        val box = p.codec.treeToValue(root["box"], Box::class.java)
-        val rotation = p.codec.treeToValue(root["rotation"], Rotation::class.java)
-        val number = root["pageNumber"].asInt()
-        val elements = ArrayList<Element<*>>()
-        for (element in root["elements"]) {
-            elements.add(p.codec.treeToValue(element, Element::class.java))
+        return when (Element.Type.fromValue(root["type"].asText())) {
+            Element.Type.WORD -> p.codec.treeToValue(root, Word::class.java)
+            Element.Type.HEADING -> p.codec.treeToValue(root, Heading::class.java)
+            Element.Type.PARAGRAPH -> p.codec.treeToValue(root, Paragraph::class.java)
+            Element.Type.LINE -> p.codec.treeToValue(root, Line::class.java)
+            else -> p.codec.treeToValue(root, AnyElement::class.java)
         }
-
-        return Page(
-            box = box,
-            rotation = rotation,
-            number = number,
-            elements = elements
-        )
     }
 }
