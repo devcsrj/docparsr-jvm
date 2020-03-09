@@ -15,9 +15,6 @@
  */
 package com.github.devcsrj.docparsr
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -67,6 +64,10 @@ internal class DefaultDocParsr(
 
     override fun newParsingJob(file: File, config: Configuration): ParsingJob {
         return ParsingJobImpl(config, file)
+    }
+
+    override fun loadParsingResult(jobId: String): ParsingResult {
+        return HttpParsingResult(jobId, baseUri, httpClient)
     }
 
     private inner class ParsingJobImpl(

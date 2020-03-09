@@ -29,6 +29,8 @@ interface DocParsr {
 
     fun newParsingJob(file: File, config: Configuration): ParsingJob
 
+    fun loadParsingResult(jobId: String): ParsingResult
+
     companion object {
 
         /**
