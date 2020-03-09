@@ -1,0 +1,16 @@
+{
+  "order": 7,
+  "isRedundant": true,
+  "isHeader": true,
+  "isFooter": true,
+  "isPageNumber": true,
+  "bulletList": true,
+  "titleScores": {
+    "size": 1.16,
+    "weight": 0,
+    "color": 0,
+    "name": 0,
+    "italic": 0,
+    "underline": 0
+  }
+}

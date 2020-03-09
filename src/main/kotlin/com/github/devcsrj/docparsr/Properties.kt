@@ -15,20 +15,20 @@
  */
 package com.github.devcsrj.docparsr
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonAnySetter
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Paragraph(
-    @JsonProperty("id") private val id: ElementId,
-    @JsonProperty("box") private val box: Box,
-    @JsonProperty("properties") private val properties: Properties,
-    @JsonProperty("content") private val content: ArrayList<Line>
-) : Element<List<Line>> {
+data class Properties(
+    val order: Int = 0,
+    val isRedundant: Boolean = false,
+    val isHeader: Boolean = false,
+    val isFooter: Boolean = false,
+    val isPageNumber: Boolean = false,
+    val bulletList: Boolean = false,
+    val others: MutableMap<String, Any> = mutableMapOf()
+) {
 
-    override fun type() = Element.Type.PARAGRAPH
-    override fun id() = id
-    override fun box() = box
-    override fun properties() = properties
-    override fun content() = content
+    @JsonAnySetter
+    internal fun putProperty(key: String, value: Any) {
+        this.others[key] = value
+    }
 }

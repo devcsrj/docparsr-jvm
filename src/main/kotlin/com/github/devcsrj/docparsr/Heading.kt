@@ -15,13 +15,14 @@
  */
 package com.github.devcsrj.docparsr
 
-import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Heading(
     @JsonProperty("id") private val id: ElementId,
     @JsonProperty("box") private val box: Box,
-    @JsonProperty("properties") private val properties: MutableMap<String, Any>,
+    @JsonProperty("properties") private val properties: Properties,
     @JsonProperty("content") private val content: ArrayList<Line>,
     @JsonProperty("level") private val level: Int
 ) : Element<List<Line>> {
@@ -30,11 +31,6 @@ data class Heading(
     override fun id() = id
     override fun box() = box
     override fun properties() = properties
-    @JsonAnySetter
-    internal fun putProperty(key: String, value: Any) {
-        this.properties[key] = value
-    }
-
     override fun content() = content
     fun level() = level
 }

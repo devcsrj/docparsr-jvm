@@ -27,8 +27,8 @@ object PageTest : Spek({
         val word1 = Word(
             id = ElementId.valueOf(1),
             box = Box(1.0, 1.0, 1.0, 1.0),
-            properties = mutableMapOf(
-                "order" to 1
+            properties = Properties(
+                order = 1
             ),
             content = "Hello",
             fontId = FontId.valueOf(1)
@@ -36,8 +36,8 @@ object PageTest : Spek({
         val word2 = Word(
             id = ElementId.valueOf(2),
             box = Box(1.0, 1.0, 1.0, 1.0),
-            properties = mutableMapOf(
-                "order" to 2
+            properties = Properties(
+                order = 2
             ),
             content = "world",
             fontId = FontId.valueOf(1)
@@ -45,20 +45,20 @@ object PageTest : Spek({
         val line = Line(
             id = ElementId.valueOf(3),
             box = Box(1.0, 1.0, 2.0, 2.0),
-            properties = mutableMapOf(),
+            properties = Properties(),
             content = arrayListOf(word1, word2)
         )
         val heading = Heading(
             id = ElementId.valueOf(4),
             box = Box(1.0, 1.0, 2.0, 2.0),
-            properties = mutableMapOf(),
+            properties = Properties(),
             content = arrayListOf(line),
             level = 1
         )
         val paragraph = Paragraph(
             id = ElementId.valueOf(5),
             box = Box(1.0, 1.0, 2.0, 2.0),
-            properties = mutableMapOf(),
+            properties = Properties(),
             content = arrayListOf(line)
         )
         val page = Page(

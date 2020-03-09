@@ -58,13 +58,35 @@ internal object DocParsrModuleTest : Spek({
 
         describe("elements") {
 
+            it("can deserialize properties") {
+                val actual = javaClass.getResourceAsStream("/element/properties.json").use {
+                    objectMapper.readValue(it, Properties::class.java)
+                }
+                assertThat(actual.order).isEqualTo(7)
+                assertThat(actual.isRedundant).isTrue()
+                assertThat(actual.isHeader).isTrue()
+                assertThat(actual.isFooter).isTrue()
+                assertThat(actual.isPageNumber).isTrue()
+                assertThat(actual.bulletList).isTrue()
+                assertThat(actual.others).containsEntry(
+                    "titleScores", mapOf(
+                        "size" to 1.16,
+                        "weight" to 0,
+                        "color" to 0,
+                        "name" to 0,
+                        "italic" to 0,
+                        "underline" to 0
+                    )
+                )
+            }
+
             it("can deserialize word") {
                 val actual = javaClass.getResourceAsStream("/element/word.json").use {
                     objectMapper.readValue(it, Word::class.java)
                 }
                 assertThat(actual.id()).isEqualTo(ElementId.valueOf(25))
                 assertThat(actual.type()).isEqualTo(Element.Type.WORD)
-                assertThat(actual.properties()).containsEntry("order", 0)
+                assertThat(actual.properties().order).isEqualTo(0)
                 assertThat(actual.box()).isEqualTo(
                     Box(
                         left = 158.15,
@@ -83,7 +105,7 @@ internal object DocParsrModuleTest : Spek({
                 }
                 assertThat(actual.id()).isEqualTo(ElementId.valueOf(81180))
                 assertThat(actual.type()).isEqualTo(Element.Type.LINE)
-                assertThat(actual.properties()).containsEntry("order", 0)
+                assertThat(actual.properties().order).isEqualTo(0)
                 assertThat(actual.box()).isEqualTo(
                     Box(
                         left = 158.15,
@@ -101,7 +123,7 @@ internal object DocParsrModuleTest : Spek({
                 }
                 assertThat(actual.id()).isEqualTo(ElementId.valueOf(84348))
                 assertThat(actual.type()).isEqualTo(Element.Type.PARAGRAPH)
-                assertThat(actual.properties()).containsEntry("order", 45)
+                assertThat(actual.properties().order).isEqualTo(45)
                 assertThat(actual.box()).isEqualTo(
                     Box(
                         left = 326.14,
@@ -119,7 +141,7 @@ internal object DocParsrModuleTest : Spek({
                 }
                 assertThat(actual.id()).isEqualTo(ElementId.valueOf(84084))
                 assertThat(actual.type()).isEqualTo(Element.Type.HEADING)
-                assertThat(actual.properties()).containsEntry("order", 0)
+                assertThat(actual.properties().order).isEqualTo(0)
                 assertThat(actual.box()).isEqualTo(
                     Box(
                         left = 158.15,
@@ -138,10 +160,10 @@ internal object DocParsrModuleTest : Spek({
                 }
                 assertThat(actual.id()).isEqualTo(ElementId.valueOf(132))
                 assertThat(actual.type()).isEqualTo(Element.Type.IMAGE)
-                assertThat(actual.properties()).containsEntry("src", "")
-                assertThat(actual.properties()).containsEntry("refId", "Bg")
-                assertThat(actual.properties()).containsEntry("xObjId", "103")
-                assertThat(actual.properties()).containsEntry("xObjExt", "jpg")
+                assertThat(actual.properties().others).containsEntry("src", "")
+                assertThat(actual.properties().others).containsEntry("refId", "Bg")
+                assertThat(actual.properties().others).containsEntry("xObjId", "103")
+                assertThat(actual.properties().others).containsEntry("xObjExt", "jpg")
                 assertThat(actual.box()).isEqualTo(
                     Box(
                         left = 0.0,

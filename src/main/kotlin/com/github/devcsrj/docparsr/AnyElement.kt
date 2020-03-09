@@ -22,7 +22,7 @@ data class AnyElement(
     @JsonProperty("id") private val id: ElementId,
     @JsonProperty("type") private val type: Element.Type,
     @JsonProperty("box") private val box: Box,
-    @JsonProperty("properties") private val properties: MutableMap<String, Any>,
+    @JsonProperty("properties") private val properties: Properties,
     @JsonProperty("content") private val content: Any?
 ) : Element<Any> {
 
@@ -32,7 +32,7 @@ data class AnyElement(
     override fun properties() = properties
     @JsonAnySetter
     internal fun putProperty(key: String, value: Any) {
-        this.properties[key] = value
+        this.properties.others[key] = value
     }
 
     override fun content() = content

@@ -23,7 +23,7 @@ interface Element<T> {
     fun type(): Type
     fun id(): ElementId
     fun box(): Box
-    fun properties(): Map<String, Any>
+    fun properties(): Properties
     fun content(): T?
 
     enum class Type {
