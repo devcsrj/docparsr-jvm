@@ -102,7 +102,6 @@ $ ./gradlew functionalTest
 * [Drawing](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#126-drawing-type)
 * [Image](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
 * [Barcode](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
-* [List](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
 * [Table](https://github.com/axa-group/Parsr/blob/master/docs/json-output.md#125-image-type)
 
 ## Motivation

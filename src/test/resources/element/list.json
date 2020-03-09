@@ -1,0 +1,26 @@
+{
+  "id": 169,
+  "type": "list",
+  "properties": {},
+  "metadata": [],
+  "box": {},
+  "isOrdered": true,
+  "content": [
+    {
+      "id": 168,
+      "type": "paragraph",
+      "properties": {},
+      "metadata": [],
+      "box": {},
+      "content": []
+    },
+    {
+      "id": 169,
+      "type": "paragraph",
+      "properties": {},
+      "metadata": [],
+      "box": {},
+      "content": []
+    }
+  ]
+}

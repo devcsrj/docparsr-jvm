@@ -154,6 +154,16 @@ internal object DocParsrModuleTest : Spek({
                 assertThat(actual.level()).isEqualTo(5)
             }
 
+            it("can deserialize list") {
+                val actual = javaClass.getResourceAsStream("/element/list.json").use {
+                    objectMapper.readValue(it, Items::class.java)
+                }
+                assertThat(actual.id()).isEqualTo(ElementId.valueOf(169))
+                assertThat(actual.type()).isEqualTo(Element.Type.LIST)
+                assertThat(actual.ordered()).isTrue()
+                assertThat(actual.content()).hasSize(2)
+            }
+
             it("can deserialize generic element") {
                 val actual = javaClass.getResourceAsStream("/element/image.json").use {
                     objectMapper.readValue(it, AnyElement::class.java)

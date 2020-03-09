@@ -28,6 +28,7 @@ internal class ElementDeserializer : StdDeserializer<Element<*>>(Element::class.
             Element.Type.HEADING -> p.codec.treeToValue(root, Heading::class.java)
             Element.Type.PARAGRAPH -> p.codec.treeToValue(root, Paragraph::class.java)
             Element.Type.LINE -> p.codec.treeToValue(root, Line::class.java)
+            Element.Type.LIST -> p.codec.treeToValue(root, Items::class.java)
             else -> p.codec.treeToValue(root, AnyElement::class.java)
         }
     }
