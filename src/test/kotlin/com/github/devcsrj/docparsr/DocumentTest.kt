@@ -21,16 +21,14 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
+import java.util.function.Supplier
 
 object DocumentTest : Spek({
 
     describe("document") {
 
         it("can accept visitor") {
-            val document = Document(object : ParsingResult {
-                override fun id() = "fake-document-id"
-                override fun source(format: Format) = javaClass.getResourceAsStream("/document.json")
-            })
+            val document = Document(Supplier { javaClass.getResourceAsStream("/document.json") })
             val visitor = mock<DocumentVisitor> {}
             document.accept(visitor)
 

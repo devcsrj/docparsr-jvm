@@ -17,16 +17,20 @@ package com.github.devcsrj.docparsr
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken
+import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.function.Supplier
 
-class Document(private val result: ParsingResult) {
+class Document(private val source: Supplier<InputStream>) {
 
     companion object {
-        fun from(result: ParsingResult) = Document(result)
+        fun from(result: ParsingResult) = Document(Supplier { result.source(Json) })
+        fun from(file: Path) = Document(Supplier { Files.newInputStream(file) })
     }
 
     fun accept(visitor: DocumentVisitor) {
-        val source = result.source(Json)
-        Jackson.MAPPER.factory.createParser(source).use {
+        Jackson.MAPPER.factory.createParser(source.get()).use {
             require(it.nextToken() == JsonToken.START_OBJECT) { "expecting '{' (START_OBJECT) from source" }
             while (it.nextToken() != JsonToken.END_OBJECT) {
                 when (it.currentName) {
