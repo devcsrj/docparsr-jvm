@@ -28,6 +28,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.Response
 import org.apache.tika.Tika
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
@@ -111,20 +112,22 @@ internal class DefaultDocParsr(
         }
 
         private fun submissionCallback(callback: ParsingJob.Callback): Callback {
-            val job = this
             return object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    callback.onFailure(job, e)
+                    callback.onFailure(null, e)
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val jobId = response.body?.string()
                     if (response.code % 100 != 2) {
-                        callback.onFailure(job, ParsingJobException("The server rejected the file ($jobId)"))
+                        callback.onFailure(null, ParsingJobException("The server rejected the file ($jobId)"))
                         return
                     }
                     if (jobId == null) {
-                        callback.onFailure(job, ParsingJobException("Expecting a job id from the server, but got none"))
+                        callback.onFailure(
+                            null,
+                            ParsingJobException("Expecting a job id from the server, but got none")
+                        )
                         return
                     }
                     runBlocking {
@@ -135,7 +138,6 @@ internal class DefaultDocParsr(
         }
 
         private suspend fun startPolling(jobId: String, callback: ParsingJob.Callback) {
-            val job = this
             val request = Request.Builder()
                 .get()
                 .url(baseUri.resolve("/api/queue/$jobId")!!)
@@ -148,19 +150,19 @@ internal class DefaultDocParsr(
                         201 -> {
                             stopPolling = true
                             callback.onSuccess(
-                                job,
+                                jobId,
                                 HttpParsingResult(jobId, baseUri, httpClient)
                             )
                         }
                         200 -> {
                             val src = it.body!!.source().inputStream()
                             val progress = objectMapper.readValue<ParsingJob.Progress>(src)
-                            callback.onProgress(job, progress)
+                            callback.onProgress(jobId, progress)
                         }
                         else -> {
                             stopPolling = true
                             callback.onFailure(
-                                job,
+                                jobId,
                                 ParsingJobException("The server returned '${it.code}' while polling for '$jobId'")
                             )
                         }
@@ -175,17 +177,18 @@ internal class DefaultDocParsr(
         override fun execute(): ParsingResult {
             val latch = CountDownLatch(1)
             var output: Any? = null
+            val logger = LoggerFactory.getLogger(DefaultDocParsr::class.java)
             enqueue(object : ParsingJob.Callback {
-                override fun onFailure(job: ParsingJob, e: Exception) {
+                override fun onFailure(jobId: String?, e: Exception) {
                     output = e
                     latch.countDown()
                 }
 
-                override fun onProgress(job: ParsingJob, progress: ParsingJob.Progress) {
-                    // Nothing to do here
+                override fun onProgress(jobId: String, progress: ParsingJob.Progress) {
+                    logger.info("[JOB-$jobId] ${progress.message}")
                 }
 
-                override fun onSuccess(job: ParsingJob, result: ParsingResult) {
+                override fun onSuccess(jobId: String, result: ParsingResult) {
                     output = result
                     latch.countDown()
                 }

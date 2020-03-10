@@ -117,14 +117,14 @@ internal class DefaultDocParsrTest {
         val updates: Queue<ParsingJob.Progress> = LinkedList()
         var actual: ParsingResult? = null
         job.enqueue(object : ParsingJob.Callback {
-            override fun onFailure(job: ParsingJob, e: Exception) {}
+            override fun onFailure(jobId: String?, e: Exception) {}
 
-            override fun onProgress(job: ParsingJob, progress: ParsingJob.Progress) {
+            override fun onProgress(jobId: String, progress: ParsingJob.Progress) {
                 updates.add(progress)
                 semaphore.release()
             }
 
-            override fun onSuccess(job: ParsingJob, result: ParsingResult) {
+            override fun onSuccess(jobId: String, result: ParsingResult) {
                 actual = result
                 semaphore.release()
             }

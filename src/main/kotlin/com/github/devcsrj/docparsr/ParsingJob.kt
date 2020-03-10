@@ -38,9 +38,9 @@ interface ParsingJob {
     fun execute(): ParsingResult
 
     interface Callback {
-        fun onFailure(job: ParsingJob, e: Exception)
-        fun onProgress(job: ParsingJob, progress: Progress)
-        fun onSuccess(job: ParsingJob, result: ParsingResult)
+        fun onFailure(jobId: String?, e: Exception)
+        fun onProgress(jobId: String, progress: Progress)
+        fun onSuccess(jobId: String, result: ParsingResult)
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
