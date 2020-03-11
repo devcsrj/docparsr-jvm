@@ -37,7 +37,7 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaType
 
-class DefaultDocParsrFnTest {
+class HttpDocParsrFnTest {
 
     companion object {
         @JvmStatic

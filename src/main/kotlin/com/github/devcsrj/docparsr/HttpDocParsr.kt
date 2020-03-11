@@ -41,7 +41,7 @@ import java.util.concurrent.CountDownLatch
  * See [API guide](https://github.com/axa-group/Parsr/blob/master/docs/api-guide.md)
  */
 @Suppress("MagicNumber")
-internal class DefaultDocParsr(
+internal class HttpDocParsr(
     val baseUri: HttpUrl,
     val pollingInterval: Duration
 ) : DocParsr {
@@ -177,7 +177,7 @@ internal class DefaultDocParsr(
         override fun execute(): ParsingResult {
             val latch = CountDownLatch(1)
             var output: Any? = null
-            val logger = LoggerFactory.getLogger(DefaultDocParsr::class.java)
+            val logger = LoggerFactory.getLogger(HttpDocParsr::class.java)
             enqueue(object : ParsingJob.Callback {
                 override fun onFailure(jobId: String?, e: Exception) {
                     output = e

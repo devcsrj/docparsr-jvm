@@ -40,7 +40,7 @@ interface DocParsr {
          */
         fun create(baseUri: URI): DocParsr {
             val uri = baseUri.toHttpUrlOrNull() ?: throw IllegalArgumentException("Not a valid uri: $baseUri")
-            return DefaultDocParsr(uri, Duration.ofSeconds(1L))
+            return HttpDocParsr(uri, Duration.ofSeconds(1L))
         }
     }
 }

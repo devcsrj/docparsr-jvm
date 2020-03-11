@@ -28,7 +28,7 @@ import java.time.Duration
 import java.util.*
 import java.util.concurrent.Semaphore
 
-internal class DefaultDocParsrTest {
+internal class HttpDocParsrTest {
 
     private val pollingInterval = Duration.ofSeconds(0)
     private lateinit var mockWebServer: MockWebServer
@@ -52,7 +52,7 @@ internal class DefaultDocParsrTest {
                 .setBody(body)
         )
 
-        val parsr = DefaultDocParsr(mockWebServer.url("/"), pollingInterval)
+        val parsr = HttpDocParsr(mockWebServer.url("/"), pollingInterval)
         val actual = parsr.getDefaultConfig()
 
         assertThat(actual).isEqualTo(GoldenConfiguration.INSTANCE)
@@ -108,7 +108,7 @@ internal class DefaultDocParsrTest {
             }
             file
         }
-        val parsr = DefaultDocParsr(mockWebServer.url("/"), pollingInterval)
+        val parsr = HttpDocParsr(mockWebServer.url("/"), pollingInterval)
         val job = parsr.newParsingJob(pdfBody, Configuration())
 
         val semaphore = Semaphore(pollCount)
