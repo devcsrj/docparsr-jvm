@@ -19,3 +19,4 @@ before_script:
 
 script:
   - ./gradlew build
+  - ./gradlew publishToSonatype --info
