@@ -18,7 +18,7 @@ package com.github.devcsrj.docparsr
 import com.fasterxml.jackson.annotation.JsonAnySetter
 
 data class Properties(
-    val order: Int = 0,
+    val order: Long = 0,
     val isRedundant: Boolean = false,
     val isHeader: Boolean = false,
     val isFooter: Boolean = false,
