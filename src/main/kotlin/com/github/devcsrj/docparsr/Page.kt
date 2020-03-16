@@ -35,7 +35,8 @@ data class Page(
         val stack = Stack<Element<*>>()
         stack.addAll(elements.asReversed())
         while (stack.isNotEmpty()) {
-            val next = stack.pop()
+            val next = stack.pop() ?: continue
+
             if (next.content() is ArrayList<*>) {
                 val children = next.content() as ArrayList<Element<*>>
                 stack.addAll(children.asReversed())
