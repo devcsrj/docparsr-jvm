@@ -30,6 +30,7 @@ object PageTest : Spek({
             properties = Properties(
                 order = 1
             ),
+            metadata = emptyList(),
             content = "Hello",
             fontId = FontId.valueOf(1)
         )
@@ -39,6 +40,7 @@ object PageTest : Spek({
             properties = Properties(
                 order = 2
             ),
+            metadata = emptyList(),
             content = "world",
             fontId = FontId.valueOf(1)
         )
@@ -46,12 +48,14 @@ object PageTest : Spek({
             id = ElementId.valueOf(3),
             box = Box(1.0, 1.0, 2.0, 2.0),
             properties = Properties(),
+            metadata = emptyList(),
             content = arrayListOf(word1, word2)
         )
         val heading = Heading(
             id = ElementId.valueOf(4),
             box = Box(1.0, 1.0, 2.0, 2.0),
             properties = Properties(),
+            metadata = emptyList(),
             content = arrayListOf(line),
             level = 1
         )
@@ -59,6 +63,7 @@ object PageTest : Spek({
             id = ElementId.valueOf(5),
             box = Box(1.0, 1.0, 2.0, 2.0),
             properties = Properties(),
+            metadata = emptyList(),
             content = arrayListOf(line)
         )
         val page = Page(

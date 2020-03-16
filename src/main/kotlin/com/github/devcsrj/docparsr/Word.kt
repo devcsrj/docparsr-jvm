@@ -23,6 +23,7 @@ data class Word(
     @JsonProperty("id") private val id: ElementId,
     @JsonProperty("box") private val box: Box,
     @JsonProperty("properties") private val properties: Properties,
+    @JsonProperty("metadata") private val metadata: List<MetadataId>,
     @JsonProperty("content") private val content: String,
     @JsonProperty("font") private val fontId: FontId
 ) : Element<String> {
@@ -31,6 +32,7 @@ data class Word(
     override fun id() = id
     override fun box() = box
     override fun properties() = properties
+    override fun metadata() = metadata
     override fun content() = content
     fun fontId() = fontId
 }

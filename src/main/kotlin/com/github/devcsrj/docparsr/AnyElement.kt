@@ -23,6 +23,7 @@ data class AnyElement(
     @JsonProperty("type") private val type: Element.Type,
     @JsonProperty("box") private val box: Box,
     @JsonProperty("properties") private val properties: Properties,
+    @JsonProperty("metadata") private val metadata: List<MetadataId>,
     @JsonProperty("content") private val content: Any?
 ) : Element<Any> {
 
@@ -30,6 +31,7 @@ data class AnyElement(
     override fun id() = id
     override fun box() = box
     override fun properties() = properties
+    override fun metadata() = metadata
     @JsonAnySetter
     internal fun putProperty(key: String, value: Any) {
         this.properties.others[key] = value
