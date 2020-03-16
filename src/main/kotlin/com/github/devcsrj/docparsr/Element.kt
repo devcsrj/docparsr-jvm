@@ -24,7 +24,7 @@ interface Element<T> {
     fun id(): ElementId
     fun box(): Box
     fun properties(): Properties
-    fun metadata(): List<MetadataId>
+    fun metadata(): Set<MetadataId>
     fun content(): T?
 
     enum class Type {

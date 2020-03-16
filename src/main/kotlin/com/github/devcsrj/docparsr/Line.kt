@@ -23,7 +23,7 @@ data class Line(
     @JsonProperty("id") private val id: ElementId,
     @JsonProperty("box") private val box: Box,
     @JsonProperty("properties") private val properties: Properties,
-    @JsonProperty("metadata") private val metadata: List<MetadataId>,
+    @JsonProperty("metadata") private val metadata: Set<MetadataId>,
     @JsonProperty("content") private val content: ArrayList<Word>
 ) : Element<List<Word>> {
 
@@ -31,6 +31,6 @@ data class Line(
     override fun id() = id
     override fun box() = box
     override fun properties() = properties
-    override fun metadata() = metadata
+    override fun metadata(): Set<MetadataId> = metadata
     override fun content() = content
 }
