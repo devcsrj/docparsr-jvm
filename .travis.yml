@@ -18,5 +18,4 @@ before_script:
   - chmod +x gradlew
 
 script:
-  - ./gradlew build
-  - ./gradlew publishToSonatype --info
+  - ./gradlew build publishToSonatype
