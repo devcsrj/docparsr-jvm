@@ -48,7 +48,7 @@ interface ParsingJob {
         @JsonProperty("start-date")
         val timestamp: ZonedDateTime,
         @JsonProperty("status")
-        val message: String
+        val message: String?
     )
 
 }

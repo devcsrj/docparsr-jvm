@@ -1,14 +1,12 @@
 {
-  "version": 0.9,
-  "extractor": {
-    "pdf": "pdfminer",
-    "ocr": "tesseract",
-    "language": [
-      "eng",
-      "fra"
-    ]
-  },
   "cleaner": [
+    "drawing-detection",
+    [
+      "image-detection",
+      {
+        "ocrImages": false
+      }
+    ],
     "out-of-page-removal",
     [
       "whitespace-removal",
@@ -25,10 +23,11 @@
     [
       "table-detection",
       {
+        "checkDrawings": true,
         "runConfig": [
           {
-            "pages": [],
-            "flavor": "lattice"
+            "flavor": "lattice",
+            "pages": []
           }
         ]
       }
@@ -37,25 +36,16 @@
       "header-footer-detection",
       {
         "ignorePages": [],
-        "maxMarginPercentage": 15
-      }
-    ],
-    [
-      "reading-order-detection",
-      {
-        "minVerticalGapWidth": 5,
-        "minColumnWidthInPagePercent": 15
+        "maxMarginPercentage": 8
       }
     ],
     "link-detection",
-    "image-detection",
+    "words-to-line-new",
     [
-      "words-to-line",
+      "reading-order-detection",
       {
-        "lineHeightUncertainty": 0.2,
-        "topUncertainty": 0.4,
-        "maximumSpaceBetweenWords": 100,
-        "mergeTableElements": false
+        "minColumnWidthInPagePercent": 15,
+        "minVerticalGapWidth": 5
       }
     ],
     [
@@ -64,23 +54,9 @@
         "tolerance": 0.25
       }
     ],
-    "heading-detection",
-    "heading-detection-dt",
-    "list-detection",
-    "page-number-detection",
-    "hierarchy-detection",
     [
       "table-of-contents-detection",
       {
-        "keywords": [
-          "contents",
-          "index",
-          "table of contents",
-          "contenidos",
-          "indice",
-          "índice",
-          "tabla de contenidos"
-        ],
         "pageKeywords": [
           "pagina",
           "page",
@@ -88,6 +64,10 @@
         ]
       }
     ],
+    "ml-heading-detection",
+    "list-detection",
+    "page-number-detection",
+    "hierarchy-detection",
     [
       "regex-matcher",
       {
@@ -110,15 +90,26 @@
       }
     ]
   ],
+  "extractor": {
+    "language": [
+      "eng",
+      "fra"
+    ],
+    "ocr": "tesseract",
+    "pdf": "pdfminer"
+  },
   "output": {
-    "granularity": "word",
-    "includeMarginals": false,
     "formats": {
-      "json": true,
-      "text": true,
       "csv": true,
+      "json": true,
       "markdown": true,
-      "pdf": false
-    }
-  }
+      "pdf": false,
+      "simpleJson": true,
+      "text": true
+    },
+    "granularity": "word",
+    "includeDrawings": false,
+    "includeMarginals": false
+  },
+  "version": 0.9
 }

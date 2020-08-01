@@ -18,7 +18,6 @@ package com.github.devcsrj.docparsr
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okio.Buffer
-import okio.buffer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -29,9 +28,6 @@ import org.junit.jupiter.api.fail
 import org.junit.jupiter.api.io.TempDir
 import org.skyscreamer.jsonassert.JSONAssert
 import java.io.File
-import java.nio.charset.StandardCharsets
-import java.util.*
-import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
@@ -72,7 +68,7 @@ class HttpDocParsrFnTest {
             it.returnType.javaType == OkHttpClient::class.java
         } ?: fail("Expecting an OkHttpClient field, but got none")
         field.javaField.apply {
-            this!!.trySetAccessible()
+            this!!.isAccessible = true
             this.set(parser, httpClient)
         }
     }

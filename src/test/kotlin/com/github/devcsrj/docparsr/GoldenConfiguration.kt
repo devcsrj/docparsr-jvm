@@ -25,11 +25,14 @@ object GoldenConfiguration {
             languages = setOf("eng", "fra")
         ),
         cleaners = setOf(
+            DrawingDetection,
+            ImageDetection(false),
             OutOfPageRemoval,
             WhitespaceRemoval(0),
             RedundancyDetection(0.5),
             TableDetection(
-                listOf(
+                checkDrawings = true,
+                runConfig = listOf(
                     TableDetection.Option(
                         pages = emptySet(),
                         flavor = TableDetection.Flavor.LATTICE
@@ -38,44 +41,22 @@ object GoldenConfiguration {
             ),
             HeaderFooterDetection(
                 ignorePages = emptySet(),
-                maxMarginPercentage = 15
-            ),
-            ReadingOrderDetection(
-                minVerticalGapWidth = 5,
-                minColumnWidthInPagePercent = 15.0
+                maxMarginPercentage = 8
             ),
             LinkDetection,
-            ImageDetection,
-            WordsToLine(
-                lineHeightUncertainty = 0.2,
-                topUncertainty = 0.4,
-                maximumSpaceBetweenWords = 100,
-                mergeTableElements = false
+            WordsToLineNew,
+            ReadingOrderDetection(
+                minColumnWidthInPagePercent = 15.0,
+                minVerticalGapWidth = 5
             ),
-            LinesToParagraph(
-                tolerance = 0.25
+            LinesToParagraph(0.25),
+            TableOfContentsDetection(
+                pageKeywords = setOf("pagina", "page", "pag")
             ),
-            HeadingDetection,
-            HeadingDetectionDt,
+            MlHeadingDetection,
             ListDetection,
             PageNumberDetection,
             HierarchyDetection,
-            TableOfContentsDetection(
-                keywords = setOf(
-                    "contents",
-                    "index",
-                    "table of contents",
-                    "contenidos",
-                    "indice",
-                    "índice",
-                    "tabla de contenidos"
-                ),
-                pageKeywords = setOf(
-                    "pagina",
-                    "page",
-                    "pag"
-                )
-            ),
             RegexMatcher(
                 isCaseSensitive = true,
                 isGlobal = true,
@@ -91,11 +72,13 @@ object GoldenConfiguration {
         ),
         output = Output(
             granularity = Output.Granularity.WORD,
+            includeDrawings = false,
             includeMarginals = false,
             formats = setOf(
                 Json,
                 Text,
                 Csv,
+                SimpleJson,
                 Markdown
             )
         )

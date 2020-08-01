@@ -86,6 +86,7 @@ internal class ConfigurationSerializer : StdSerializer<Configuration>(Configurat
         gen.apply {
             writeObjectFieldStart("output")
             writeStringField("granularity", output.granularity.name.toLowerCase())
+            writeBooleanField("includeDrawings", output.includeDrawings)
             writeBooleanField("includeMarginals", output.includeMarginals)
             writeObjectFieldStart("formats")
             for (sealedSubclass in Format::class.sealedSubclasses) {

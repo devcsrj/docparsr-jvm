@@ -147,6 +147,6 @@ internal class HttpDocParsrTest {
         assertThat(body).contains("Content-Length: 13264")
         assertThat(body).contains("Content-Disposition: form-data; name=\"config\"; filename=\"parsr-conf")
         assertThat(body).contains("Content-Type: application/json")
-        assertThat(body).contains("Content-Length: 976")
+        assertThat(body).contains("Content-Length: 920")
     }
 }

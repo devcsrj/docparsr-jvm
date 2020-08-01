@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import kotlin.reflect.KClass
 
+@SuppressWarnings("TooManyFunctions")
 internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Configuration::class.java) {
 
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Configuration {
@@ -66,7 +67,7 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
         return cleaners
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "ComplexMethod")
     private fun deserializeCleaner(node: JsonNode): Cleaner {
         if (node.isTextual) {
             val klass: KClass<out Cleaner>? = Cleaner::class.sealedSubclasses.find {
@@ -80,51 +81,97 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
             val name = node[0].asText()
             val opts = node[1]
             return when (name) {
-                "whitespace-removal" -> WhitespaceRemoval(opts["minWidth"].asInt())
+                "drawing-detection" -> DrawingDetection
+                "header-footer-detection" -> deserializeHeaderFooterDetection(opts)
+                "hierarchy-detection" -> HierarchyDetection
+                "image-detection" -> ImageDetection(opts["ocrImages"].asBoolean())
+                "key-value-detection" -> deserializeKeyValueDetection(opts)
+                "lines-to-paragraph" -> LinesToParagraph(tolerance = opts["tolerance"].asDouble())
+                "link-detection" -> LinkDetection
+                "list-detection" -> ListDetection
+                "ml-heading-detection" -> MlHeadingDetection
+                "number-correction" -> deserializeNumberCorrection(opts)
+                "out-of-page-removal" -> OutOfPageRemoval
+                "page-number-detection" -> PageNumberDetection
+                "reading-order-detection" -> deserializeReadingOrderDetection(opts)
                 "redundancy-detection" -> RedundancyDetection(opts["minOverlap"].asDouble())
-                "table-detection" -> TableDetection(opts["runConfig"].map { opt ->
-                    TableDetection.Option(
-                        pages = opt["pages"].map { it.asInt() }.toSet(),
-                        flavor = TableDetection.Flavor.fromString(opt["flavor"].asText())
-                    )
-                }.toList())
-                "header-footer-detection" -> HeaderFooterDetection(
-                    ignorePages = opts["ignorePages"].map { it.asInt() }.toSet(),
-                    maxMarginPercentage = opts["maxMarginPercentage"].asInt()
-
-                )
-                "reading-order-detection" -> ReadingOrderDetection(
-                    minVerticalGapWidth = opts["minVerticalGapWidth"].asInt(),
-                    minColumnWidthInPagePercent = opts["minColumnWidthInPagePercent"].asDouble()
-                )
-                "words-to-line" -> WordsToLine(
-                    lineHeightUncertainty = opts["lineHeightUncertainty"].asDouble(),
-                    topUncertainty = opts["topUncertainty"].asDouble(),
-                    maximumSpaceBetweenWords = opts["maximumSpaceBetweenWords"].asInt(),
-                    mergeTableElements = opts["mergeTableElements"].asBoolean()
-                )
-                "lines-to-paragraph" -> LinesToParagraph(
-                    tolerance = opts["tolerance"].asDouble()
-
-                )
-                "table-of-contents-detection" -> TableOfContentsDetection(
-                    keywords = opts["keywords"].map { it.asText() }.toSet(),
-                    pageKeywords = opts["pageKeywords"].map { it.asText() }.toSet()
-                )
-                "regex-matcher" -> RegexMatcher(
-                    isCaseSensitive = opts["isCaseSensitive"].asBoolean(),
-                    isGlobal = opts["isGlobal"].asBoolean(),
-                    queries = opts["queries"].map {
-                        RegexMatcher.Query(
-                            label = it["label"].asText(),
-                            regex = it["regex"].asText()
-                        )
-                    }.toSet()
-                )
+                "regex-matcher" -> deserializeRegexMatcher(opts)
+                "separate-words" -> SeparateWords
+                "table-detection" -> deserializeTableDetection(opts)
+                "table-of-contents-detection" -> deserializeTableOfContentsDetection(opts)
+                "whitespace-removal" -> WhitespaceRemoval(opts["minWidth"].asInt())
+                "words-to-line" -> deserializeWordsToLine(opts)
                 else -> UnknownCleaner(name)
             }
         }
         return UnknownCleaner(node.asText())
+    }
+
+    private fun deserializeTableOfContentsDetection(opts: JsonNode): TableOfContentsDetection {
+        return TableOfContentsDetection(
+            pageKeywords = opts["pageKeywords"].map { it.asText() }.toSet()
+        )
+    }
+
+    private fun deserializeWordsToLine(opts: JsonNode): WordsToLine {
+        return WordsToLine(
+            lineHeightUncertainty = opts["lineHeightUncertainty"].asDouble(),
+            topUncertainty = opts["topUncertainty"].asDouble(),
+            maximumSpaceBetweenWords = opts["maximumSpaceBetweenWords"].asInt(),
+            mergeTableElements = opts["mergeTableElements"].asBoolean()
+        )
+    }
+
+    private fun deserializeReadingOrderDetection(opts: JsonNode): ReadingOrderDetection {
+        return ReadingOrderDetection(
+            minVerticalGapWidth = opts["minVerticalGapWidth"].asInt(),
+            minColumnWidthInPagePercent = opts["minColumnWidthInPagePercent"].asDouble()
+        )
+    }
+
+    private fun deserializeNumberCorrection(opts: JsonNode): Cleaner {
+        return NumberCorrection(
+            fixSplitNumbers = opts["fixSplitNumbers"].asBoolean(),
+            maxConsecutiveSplits = opts["maxConsecutiveSplits"].asInt(),
+            numberRegExp = opts["numberRegExp"].asText(),
+            whitelist = opts["whitelist"].map { it.asText() }.toSet()
+        )
+    }
+
+    private fun deserializeKeyValueDetection(opts: JsonNode): Cleaner {
+        return UnknownCleaner("key-value-detection")
+    }
+
+    private fun deserializeHeaderFooterDetection(opts: JsonNode): HeaderFooterDetection {
+        return HeaderFooterDetection(
+            ignorePages = opts["ignorePages"].map { it.asInt() }.toSet(),
+            maxMarginPercentage = opts["maxMarginPercentage"].asInt()
+        )
+    }
+
+    private fun deserializeRegexMatcher(opts: JsonNode): RegexMatcher {
+        return RegexMatcher(
+            isCaseSensitive = opts["isCaseSensitive"].asBoolean(),
+            isGlobal = opts["isGlobal"].asBoolean(),
+            queries = opts["queries"].map {
+                RegexMatcher.Query(
+                    label = it["label"].asText(),
+                    regex = it["regex"].asText()
+                )
+            }.toSet()
+        )
+    }
+
+    private fun deserializeTableDetection(opts: JsonNode): TableDetection {
+        return TableDetection(
+            opts["checkDrawings"].booleanValue(),
+            opts["runConfig"].map { opt ->
+                TableDetection.Option(
+                    pages = opt["pages"].map { it.asInt() }.toSet(),
+                    flavor = TableDetection.Flavor.fromString(opt["flavor"].asText())
+                )
+            }.toList()
+        )
     }
 
     private fun deserializeOutput(node: JsonNode): Output {
@@ -134,6 +181,7 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
             else -> throw UnsupportedOperationException("granularity: $value")
         }
         val includeMarginals = node["includeMarginals"].asBoolean()
+        val includeDrawings = node["includeDrawings"].asBoolean()
 
         val formatNode = node["formats"]
         val formats = mutableSetOf<Format>()
@@ -152,10 +200,14 @@ internal class ConfigurationDeserializer : StdDeserializer<Configuration>(Config
         if (formatNode["pdf"].asBoolean()) {
             formats.add(Pdf)
         }
+        if (formatNode["simpleJson"].asBoolean()) {
+            formats.add(SimpleJson)
+        }
 
         return Output(
             granularity = granularity,
             includeMarginals = includeMarginals,
+            includeDrawings = includeDrawings,
             formats = formats
         )
     }

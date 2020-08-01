@@ -19,7 +19,7 @@ import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 import java.net.URI
 
-class ParsrServerContainer : GenericContainer<ParsrServerContainer>("axarev/parsr") {
+class ParsrServerContainer : GenericContainer<ParsrServerContainer>("axarev/parsr:1.0.1") {
 
     companion object {
         const val PORT = 3001
